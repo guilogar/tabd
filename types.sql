@@ -4,13 +4,7 @@
 -- drop type Treatment_objtyp force;
 -- /
 
--- drop type TreatmentTypeList_vartyp force;
--- /
-
--- drop type TreatmentList_ntabtyp force;
--- /
-
--- drop type PetTypeList_vartyp force;
+-- drop type TreatmentList_vartyp force;
 -- /
 
 -- drop type Pet_objtyp force;
@@ -30,13 +24,10 @@ create or replace type Address_objtyp as object (
 );
 /
 
-create or replace type TreatmentTypeList_vartyp as varray(500) of varchar(500);
-/
-
 create or replace type Treatment_objtyp as object (
     id number,
     treatmentDate date,
-    treatmentType TreatmentTypeList_vartyp
+    treatmentType varchar(500)
     -- TODO treatmentType enum('Rabies vaccine',
     --                   'Vaccination against panleukopenia',
     --                   'Vaccination against rhinotracheid',
@@ -45,10 +36,7 @@ create or replace type Treatment_objtyp as object (
 );
 /
 
-create or replace type TreatmentList_ntabtyp as table of Treatment_objtyp;
-/
-
-create or replace type PetTypeList_vartyp as varray(500) of varchar(500);
+create or replace type TreatmentList_vartyp as varray(500) Treatment_objtyp;
 /
 
 create or replace type Pet_objtyp as object (
@@ -58,8 +46,8 @@ create or replace type Pet_objtyp as object (
     gender NUMBER(1,0),
     isTaken NUMBER(1,0),
     dateOfArrivalShelter date,
-    petType PetTypeList_vartyp,
-    Treatments_List TreatmentList_ntabtyp,
+    petType varchar(500),
+    Treatments_List TreatmentList_vartyp,
     dateOfDeparture date
     -- TODO: Family_obj REF Family_objtyp,
 );
