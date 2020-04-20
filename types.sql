@@ -4,10 +4,13 @@ drop type Address_objtyp force;
 drop type Treatment_objtyp force;
 /
 
-drop type TreatmentTypeList_treatmenttyp force;
+drop type TreatmentTypeList_vartyp force;
 /
 
 drop type TreatmentList_ntabtyp force;
+/
+
+drop type PetTypeList_vartyp force;
 /
 
 drop type Pet_objtyp force;
