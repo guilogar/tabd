@@ -1,20 +1,20 @@
--- drop type Address_objtyp force;
--- /
+drop type Address_objtyp force;
+/
 
--- drop type Treatment_objtyp force;
--- /
+drop type Treatment_objtyp force;
+/
 
--- drop type TreatmentList_vartyp force;
--- /
+drop type TreatmentList_vartyp force;
+/
 
--- drop type Pet_objtyp force;
--- /
+drop type Pet_objtyp force;
+/
 
--- drop type PetList_pettyp force;
--- /
+drop type PetList_pettyp force;
+/
 
--- drop type Family_objtyp force;
--- /
+drop type Family_objtyp force;
+/
 
 create or replace type Address_objtyp as object (
     street    varchar(500),
@@ -36,7 +36,7 @@ create or replace type Treatment_objtyp as object (
 );
 /
 
-create or replace type TreatmentList_vartyp as varray(500) Treatment_objtyp;
+create or replace type TreatmentList_vartyp as varray(500) of Treatment_objtyp;
 /
 
 create or replace type Pet_objtyp as object (
@@ -48,8 +48,14 @@ create or replace type Pet_objtyp as object (
     dateOfArrivalShelter date,
     petType varchar(500),
     Treatments_List TreatmentList_vartyp,
-    dateOfDeparture date
+    dateOfDeparture date,
     -- TODO: Family_obj REF Family_objtyp,
+    MEMBER FUNCTION getDateOfTreatmentType(treatmentType varchar) return date,
+    MEMBER FUNCTION getAllPetsByType(petType varchar)             return varray(500) of Pet_objtyp,
+    MEMBER FUNCTION getAllAvailablePets()                         return varray(500) of Pet_objtyp,
+    MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number(0, 1),
+    MEMBER PROCEDURE addTreatment(treatment Treatment_objtyp),
+    MEMBER PROCEDURE removeTreatment(treatment Treatment_objtyp)
 );
 /
 
@@ -63,6 +69,8 @@ create or replace type Family_objtyp as object (
     contactEmail varchar(500),
     contactPhone varchar(500),
     Address_obj Address_objtyp,
-    Pets_List PetList_pettyp
+    Pets_List PetList_pettyp,
+    MEMBER PROCEDURE cancelAdoption(pet Pet_objtyp),
+    MEMBER PROCEDURE adopt(pet Pet_objtyp)
 );
 /
