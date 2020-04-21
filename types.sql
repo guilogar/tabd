@@ -32,6 +32,15 @@ create or replace type Treatment_objtyp as object (
 
 /
 
+create or replace type TreatmentType_objtyp as object (
+    treatmentType varchar(500)
+);
+
+/
+
+create or replace type TreatmentTypeList_vartyp as table of TreatmentType_objtyp;
+
+/
 create or replace type TreatmentList_vartyp as table of Treatment_objtyp;
 
 /
