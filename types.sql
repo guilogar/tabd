@@ -32,6 +32,10 @@ create or replace type Treatment_objtyp as object (
 
 /
 
+create or replace type TreatmentList_vartyp as table of Treatment_objtyp;
+
+/
+
 create or replace type Pet_objtyp as object (
     id number,
     name varchar(500),
