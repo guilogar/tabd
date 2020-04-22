@@ -32,41 +32,6 @@ create or replace type Treatment_objtyp as object (
 
 /
 
-create or replace type TreatmentType_objtyp as object (
-    treatmentType varchar(500),
-    CONSTRUCTOR FUNCTION treatmentType (treatmentType varchar) return self as result
-    );
-
-/
-
-create or replace type body TreatmentType_objtyp as 
-    CONSTRUCTOR FUNCTION treatmentType (treatmentType varchar)
-    return self as result
-        as 
-            begin
-                if(LOWER(treatmentType)) in ('Rabies vaccine',
-                       'Vaccination against panleukopenia',
-                       'Vaccination against rhinotracheid',
-                       'Plague vaccine',
-                       'Castration')
-                    then 
-                        self.treatmentType := treatmentType;
-
-                else 
-                    RAISE_APPLICATION_ERROR(-20999,'Unknown type "' || treatmentType || '"'); 
-
-                end if;
-            return;
-        end;
-    end;
-                   
-create or replace type TreatmentTypeList_vartyp as table of TreatmentType_objtyp;
-
-/
-create or replace type TreatmentList_vartyp as table of Treatment_objtyp;
-
-/
-
 create or replace type Pet_objtyp as object (
     id number,
     name varchar(500),
