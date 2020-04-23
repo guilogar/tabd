@@ -10,6 +10,10 @@ drop type PetList_pettyp force;
 
 drop type Family_objtyp force;
 
+drop type TreatmentType_objtyp force;
+
+drop type PetType_objtyp force;
+
 create or replace type Address_objtyp as object (
     street    varchar(500),
     house     number,
@@ -19,15 +23,24 @@ create or replace type Address_objtyp as object (
 
 /
 
+create or replace type TreatmentType_objtyp as object (
+    id number,
+    treatmentTypeTitle varchar(500)
+);
+
+/
+
+create or replace type PetType_objtyp as object (
+    id number,
+    petTypeTitle varchar(500)
+);
+
+/
+
 create or replace type Treatment_objtyp as object (
     id number,
     treatmentDate date,
-    treatmentType varchar(500)
-    -- TODO treatmentType enum('Rabies vaccine',
-    --                   'Vaccination against panleukopenia',
-    --                   'Vaccination against rhinotracheid',
-    --                   'Plague vaccine',
-    --                   'Castration'),
+    treatmentType TreatmentType_objtyp
 );
 
 /
@@ -43,15 +56,14 @@ create or replace type Pet_objtyp as object (
     gender NUMBER(1,0),
     isTaken NUMBER(1,0),
     dateOfArrivalShelter date,
-    petType varchar(500),
+    petType PetType_objtyp,
     Treatments_List TreatmentList_vartyp,
     dateOfDeparture date,
     MEMBER FUNCTION getDateOfTreatmentType(treatmentType varchar) return date,
     MEMBER FUNCTION getAllPetsByType(petType varchar)             return Pet_objtyp,
     MEMBER FUNCTION getAllAvailablePets                           return Pet_objtyp,
     MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number,
-    MEMBER PROCEDURE addTreatment(treatment Treatment_objtyp),
-    MEMBER PROCEDURE removeTreatment(treatment Treatment_objtyp)
+    MEMBER PROCEDURE addTreatment(treatment Treatment_objtyp)
 );
 
 /
