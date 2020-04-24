@@ -15,7 +15,9 @@ create or replace type Address_objtyp FORCE as object (
     street    varchar(500),
     house     number,
     apartment varchar(500),
-    zip       varchar(500)
+    zip       varchar(500),
+    MEMBER PROCEDURE display
+    
 );
 
 /
@@ -39,8 +41,7 @@ create or replace type PetType_objtyp FORCE as object (
 create or replace type Treatment_objtyp FORCE as object (
     id number,
     treatmentDate date,
-    treatmentType_ref REF TreatmentType_objtyp
-);
+    treatmentType_ref REF TreatmentType_objtyp);
 
 /
 
@@ -54,8 +55,11 @@ create or replace type Family_objtyp FORCE as object (
     contactName varchar(500),
     contactEmail varchar(500),
     contactPhone varchar(500),
-    Address_obj Address_objtyp
-);
+    Address_obj Address_objtyp,
+    MEMBER PROCEDURE display, 
+    MEMBER FUNCTION getContactPhone                     RETURN VARCHAR,
+    MEMBER PROCEDURE findFamilyByPhone(phone varchar)
+    );
 
 /
 create or replace type Pet_objtyp FORCE as object (
@@ -69,13 +73,17 @@ create or replace type Pet_objtyp FORCE as object (
     Treatments_List TreatmentList_vartyp,
     dateOfDeparture date,
     FamilyRef REF Family_objtyp,
-    MEMBER FUNCTION getDateOfTreatmentType(treatmentType varchar) return date,
-    MEMBER FUNCTION getAllPetsByType(petType varchar)             return Pet_objtyp,
-    MEMBER FUNCTION getAllAvailablePets                           return Pet_objtyp,
-    MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number,
-    MEMBER PROCEDURE addTreatment(treatment Treatment_objtyp),
-    MEMBER PROCEDURE adoptByFamily(family Family_objtyp),
-    MEMBER PROCEDURE cancelAdoption
+    --MEMBER FUNCTION getAllPetsByType(petType varchar)             return Pet_objtyp,
+    --MEMBER FUNCTION getAllAvailablePets                           return Pet_objtyp,
+      MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number,
+      MEMBER FUNCTION getALLTreatments                              return TreatmentList_vartyp,
+    --MEMBER PROCEDURE adoptByFamily(family Family_objtyp),
+    --MEMBER PROCEDURE cancelAdoption
+      MEMBER PROCEDURE DISPLAY,
+       MEMBER PROCEDURE addTreatment(treatmentType TreatmentType_objtyp),
+       MEMBER FUNCTION getAllAdoptedPetsByFamily(familyId number)                   RETURN    
+
+
 );
 
 /
