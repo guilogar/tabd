@@ -1,6 +1,6 @@
-drop table Family_objtab force;
-
 drop table TreatmentType_objtab force;
+
+drop table Family_objtab force;
 
 drop table Pet_objtab force;
 
@@ -32,8 +32,11 @@ nested table Treatments_List store as Pets_Treatments((
     ORGANIZATION INDEX COMPRESS);
 /
 
+
 alter table  Pet_objtab 
 ADD CONSTRAINT petType_notNull check ( petType is not null );
 /
+
+
 
 

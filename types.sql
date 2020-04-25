@@ -30,7 +30,6 @@ create or replace type TreatmentType_objtyp FORCE as object (
 /
 
 create or replace type PetType_objtyp FORCE as object (
-    id number,
     petTypeTitle varchar(500),
     CONSTRUCTOR FUNCTION petType_objtyp( petTypeTitle varchar)
     RETURN SELF AS RESULT
@@ -41,7 +40,9 @@ create or replace type PetType_objtyp FORCE as object (
 create or replace type Treatment_objtyp FORCE as object (
     id number,
     treatmentDate date,
-    treatmentType_ref REF TreatmentType_objtyp);
+    treatmentType varchar(500),
+    MEMBER PROCEDURE display);
+
 
 /
 
@@ -75,15 +76,17 @@ create or replace type Pet_objtyp FORCE as object (
     FamilyRef REF Family_objtyp,
     --MEMBER FUNCTION getAllPetsByType(petType varchar)             return Pet_objtyp,
     --MEMBER FUNCTION getAllAvailablePets                           return Pet_objtyp,
-      MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number,
-      MEMBER FUNCTION getALLTreatments                              return TreatmentList_vartyp,
-    --MEMBER PROCEDURE adoptByFamily(family Family_objtyp),
-    --MEMBER PROCEDURE cancelAdoption
+    --MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number,
+      MEMBER PROCEDURE getALLTreatments,
+      MEMBER PROCEDURE adoptByFamily(idFamily number),
+      MEMBER PROCEDURE cancelAdoption,
       MEMBER PROCEDURE DISPLAY,
-       MEMBER PROCEDURE addTreatment(treatmentType TreatmentType_objtyp),
-       MEMBER FUNCTION getAllAdoptedPetsByFamily(familyId number)                   RETURN    
-
-
+      MEMBER PROCEDURE addTreatment(treatmentType varchar, dateOfTr date)
+    --MEMBER FUNCTION getAllAdoptedPetsByFamily(familyId number)                   RETURN number    
 );
+
+/
+
+create or replace type PetsList_vartyp FORCE as table of Pet_objtyp;
 
 /
