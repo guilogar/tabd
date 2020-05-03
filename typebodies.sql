@@ -35,18 +35,34 @@ CREATE OR REPLACE TYPE BODY Family_objtyp AS
             ', email: ' || self.contactEmail || ', phone: ' || self.contactPhone);
             self.Address_obj.display;
             --TODO: adopted pets list
-
         END;
 
-    MEMBER FUNCTION getContactPhone RETURN VARCHAR IS
-        BEGIN
-            RETURN self.contactPhone;
-        END; 
+    MEMBER PROCEDURE setContactPhone(newPhone varchar) IS
+        BEGIN 
+            UPDATE Family_objtab f
+            SET f.contactPhone = newPhone
+            WHERE f.id = SELF.id;
+        END;
 
-    MEMBER PROCEDURE findFamilyByPhone(phone varchar) IS
-        BEGIN
-            DBMS_OUTPUT.PUT_LINE('f');
-        END;     
+    MEMBER PROCEDURE setEmail(newEmail varchar) IS
+        BEGIN 
+            UPDATE Family_objtab f
+            SET f.contactEmail = newEmail
+            WHERE f.id = SELF.id;
+        END;
+
+    MEMBER PROCEDURE setAddress(newAddress Address_objtyp) IS
+        BEGIN 
+            UPDATE Family_objtab f
+            SET f.Address_obj = newAddress
+            WHERE f.id = SELF.id;
+        END;  
+
+    MEMBER PROCEDURE deleteFamily IS
+        BEGIN 
+            DELETE FROM Family_objtab f
+            WHERE f.id = SELF.id;
+        END;  
 END;
          
 /
@@ -62,7 +78,7 @@ END;
 /
 
 CREATE OR REPLACE TYPE BODY Pet_objtyp AS 
--- add treatment to the pet
+--add treatment to the pet
     MEMBER PROCEDURE addTreatment(treatmentType varchar, dateOfTr date) IS
         treatmentType_title VARCHAR(200);
         NULL_TABLE EXCEPTION;
@@ -107,21 +123,15 @@ CREATE OR REPLACE TYPE BODY Pet_objtyp AS
     END;
     MEMBER PROCEDURE DISPLAY IS
     BEGIN
-        DBMS_OUTPUT.PUT_LINE('Pet: ');
+        DBMS_OUTPUT.PUT_LINE('Pet: ' || self.id ||', name: ' || self.name ||
+        ', type: ' || petType || ', gender:' || self.gender || 'is taken?: ' || self.isTaken);
     END;
 
 
-     MEMBER PROCEDURE getALLTreatments IS
-        i INTEGER;
-        pet_treatments  TreatmentList_vartyp; 
-
+    MEMBER FUNCTION getALLTreatments return TreatmentList_vartyp IS
         BEGIN
-            FOR i in 1..SELF.Treatments_List.COUNT LOOP
-                 DBMS_OUTPUT.PUT_LINE('id: ' || self.Treatments_List(i).id 
-                 || 'procedure: '  || self.Treatments_List(i).treatmentType
-                 || 'date: ' || self.Treatments_List(i).treatmentDate);
-            END LOOP; 
-    END; 
+            RETURN self.Treatments_List; 
+        END;    
 
     MEMBER PROCEDURE cancelAdoption IS
     BEGIN
@@ -143,7 +153,61 @@ CREATE OR REPLACE TYPE BODY Pet_objtyp AS
                 FamilyRef = familyRef_obj 
             WHERE id = self.id;
 
-        END;        
+        END;   
+
+     MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar) return number IS
+        countNum number;
+        i INTEGER;
+        BEGIN
+            countNum := 0;
+               FOR i in 1..SELF.Treatments_List.COUNT LOOP
+               if(self.Treatments_List(i).treatmentType = LOWER(treatmentType)) then
+                    countNum := countNum + 1;
+                END IF;    
+            END LOOP; 
+
+            IF (countNum > 0) then
+                RETURN 1;
+            ELSE RETURN 0;
+            END If;
+
+        END; 
+
+    MEMBER PROCEDURE setDateOfDep(dateOfDep date) IS
+         BEGIN 
+            UPDATE Pet_objtab p
+            SET p.dateOfDeparture = dateOfDep
+            WHERE f.id = SELF.id;
+        END; 
+
+    MEMBER PROCEDURE setName(newName1 varchar) IS
+        BEGIN 
+            UPDATE Pet_objtab p
+            SET p.name = newName1
+            WHERE f.id = SELF.id;
+        END; 
+
+     MEMBER PROCEDURE setDateOfBirth(dateOfBirth date) IS
+        BEGIN 
+            UPDATE Pet_objtab p
+            SET p.dateOfBirth = dateOfBirth
+            WHERE f.id = SELF.id;
+        END;
+
+        MEMBER PROCEDURE setdateOfArrivalShelter(dateOfArrivalShelter date) IS
+        BEGIN 
+            UPDATE Pet_objtab p
+            SET p.dateOfArrivalShelter = dateOfArrivalShelter
+            WHERE f.id = SELF.id;
+        END;
+
+        MEMBER PROCEDURE setPetType(petTypepet varchar) IS
+        BEGIN 
+            UPDATE Pet_objtab p
+            SET p.petType = petType_objtyp(petTypepet).petTypeTitle
+            WHERE f.id = SELF.id;
+        END; 
+         
 END;
 
 /
