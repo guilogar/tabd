@@ -26,7 +26,6 @@ create or replace type TreatmentType_objtyp  as object (
     id number,
     treatmentTypeTitle varchar(500)
 );
-
 /
 
 create or replace type PetType_objtyp as object (
@@ -35,6 +34,8 @@ create or replace type PetType_objtyp as object (
     RETURN SELF AS RESULT
 );
 
+-- forward declaration of Pet_objtyp
+-- create or replace type Pet_objtyp;
 /
 
 create or replace type Treatment_objtyp  as object (
