@@ -1,8 +1,8 @@
--- drop type Address_objtyp force;
+drop type Address_objtyp force;
 
--- drop type Treatment_objtyp force;
+drop type Treatment_objtyp force;
 
--- drop type TreatmentList_vartyp force;
+drop type TreatmentList_vartyp force;
 
 drop type Family_objtyp force;
 
@@ -19,7 +19,6 @@ create or replace type Address_objtyp FORCE as object (
     MEMBER PROCEDURE display
     
 );
-
 /
 
 create or replace type TreatmentType_objtyp FORCE as object (
@@ -33,22 +32,17 @@ create or replace type PetType_objtyp FORCE as object (
     CONSTRUCTOR FUNCTION petType_objtyp( petTypeTitle varchar)
     RETURN SELF AS RESULT
 );
-
--- forward declaration of Pet_objtyp
--- create or replace type Pet_objtyp;
 /
 
 create or replace type Treatment_objtyp FORCE as object (
     id number,
     treatmentDate date,
     treatmentType varchar(500),
-    MEMBER PROCEDURE display);
-
-
+    MEMBER PROCEDURE display
+);
 /
 
 create or replace type TreatmentList_vartyp FORCE as table of Treatment_objtyp;
-
 /
 
 create or replace type Family_objtyp FORCE as object (
@@ -61,9 +55,9 @@ create or replace type Family_objtyp FORCE as object (
     MEMBER PROCEDURE display, 
     MEMBER FUNCTION getContactPhone                     RETURN VARCHAR,
     MEMBER PROCEDURE findFamilyByPhone(phone varchar)
-    );
-
+);
 /
+
 create or replace type Pet_objtyp FORCE as object (
     id number,
     name varchar(500),
@@ -85,9 +79,7 @@ create or replace type Pet_objtyp FORCE as object (
       MEMBER PROCEDURE addTreatment(treatmentType varchar, dateOfTr date)
     --MEMBER FUNCTION getAllAdoptedPetsByFamily(familyId number)                   RETURN number    
 );
-
 /
 
 create or replace type PetsList_vartyp FORCE as table of Pet_objtyp;
-
 /
