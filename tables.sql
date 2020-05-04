@@ -1,9 +1,8 @@
 drop table TreatmentType_objtab force;
 
-drop table Family_objtab force;
-
 drop table Pet_objtab force;
 
+drop table Family_objtab force;
 
 
 create table TreatmentType_objtab of TreatmentType_objtyp (id primary key) 

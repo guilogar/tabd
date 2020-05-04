@@ -23,6 +23,8 @@ CREATE OR REPLACE TYPE BODY Address_objtyp AS
             self.house || ', apartment: ' || self.apartment  ||
             ', zip: ' || self.zip) ;
         END;
+
+
 END;
 /
 
