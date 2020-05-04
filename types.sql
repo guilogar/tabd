@@ -1,16 +1,14 @@
-drop type Address_objtyp force;
+-- drop type Address_objtyp force;
 
-drop type Treatment_objtyp force;
+-- drop type Treatment_objtyp force;
 
-drop type TreatmentList_vartyp force;
+-- drop type TreatmentList_vartyp force;
 
 drop type Family_objtyp force;
 
 drop type TreatmentType_objtyp force;
 
 drop type Pet_objtyp force;
-
-drop type PetsList_vartyp force;
 
 
 create or replace type Address_objtyp  as object (
