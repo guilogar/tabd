@@ -48,7 +48,7 @@ INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petTy
 INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petType, Treatments_List, dateOfDeparture, FamilyRef REF)
      VALUES('Max', TO_DATE('01/01/2017', 'MM/DD/YYYY'), 1, 0, sysdate, petType_objtyp('dog').petTypeTitle, TreatmentList_vartyp(), null, null)
 INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petType, Treatments_List, dateOfDeparture, FamilyRef REF)
-     VALUES('Kora', TO_DATE('01/06/2019', 'MM/DD/YYYY'), 0, 1, sysdate, petType_objtyp('dog').petTypeTitle, TreatmentList_vartyp(), null, null)
+     VALUES('Kora', TO_DATE('01/06/2019', 'MM/DD/YYYY'), 0, 0, sysdate, petType_objtyp('dog').petTypeTitle, TreatmentList_vartyp(), null, null)
 INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petType, Treatments_List, dateOfDeparture, FamilyRef REF)
      VALUES('Greta', TO_DATE('01/01/2020', 'MM/DD/YYYY'), 0, 0, sysdate, petType_objtyp('cat').petTypeTitle, TreatmentList_vartyp(), null, null)
 SELECT * FROM dual;
