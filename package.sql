@@ -27,6 +27,8 @@ CREATE OR REPLACE PACKAGE SHELTER AS
     PROCEDURE deleteFamily(familyId number);
     FUNCTION getAllFamilies                                    RETURN FamilyList_vartyp;
     FUNCTION getFamilyById(id number)                          RETURN Family_objtyp;
+    FUNCTION getFamilyByPhone(phone varchar)                   RETURN Family_objtyp;
+    FUNCTION getFamilyIdByPhone(phone varchar)                 RETURN number;
     
 
 END SHELTER;
@@ -232,6 +234,42 @@ PROCEDURE createFamily(familyName varchar, contactName varchar, contactPhone var
                RETURN family;
             END; 
     END;
+
+    FUNCTION getFamilyByPhone(phone varchar)  RETURN Family_objtyp IS
+        family family_objtyp;
+        BEGIN
+            BEGIN
+            SELECT VALUE(f) INTO family
+                FROM Family_objtab f
+                WHERE f.contactPhone = phone;
+
+            EXCEPTION
+             WHEN NO_DATA_FOUND THEN
+                 raise_application_error (-20001, 'No such family');
+            END;
+
+            BEGIN
+               RETURN family;
+            END; 
+    END;
+
+    FUNCTION getFamilyIdByPhone(phone varchar)  RETURN number IS
+    family family_objtyp;
+        BEGIN
+            BEGIN
+            SELECT VALUE(f) INTO family
+                FROM Family_objtab f
+                WHERE f.contactPhone = phone;
+
+            EXCEPTION
+             WHEN NO_DATA_FOUND THEN
+                 raise_application_error (-20001, 'No such family');
+            END;
+
+            BEGIN
+               RETURN family.id;
+            END; 
+    END;  
 
     FUNCTION getAllFamilies  return FamilyList_vartyp IS
         family Family_objtyp;
