@@ -25,7 +25,7 @@
 \RequirePackage{wrapfig}
 \RequirePackage{vmargin}
     \setpapersize{A4}
-    \setmarginsrb{20mm}{10mm}{20mm}{20mm}%left top right bottom
+    \setmarginsrb{20mm}{20mm}{20mm}{20mm}%left top right bottom
                  {8mm}{6mm}{10mm}{10mm}%headheight headsep footheight footskip
 
 \definecolor{Blu}{RGB}{8,144,213}
