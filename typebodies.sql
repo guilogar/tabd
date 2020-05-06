@@ -23,6 +23,8 @@ CREATE OR REPLACE TYPE BODY Address_objtyp AS
             self.house || ', apartment: ' || self.apartment  ||
             ', zip: ' || self.zip) ;
         END;
+
+
 END;
 /
 
@@ -34,34 +36,33 @@ CREATE OR REPLACE TYPE BODY Family_objtyp AS
             self.familyName || ', contact name: ' || self.contactName ||
             ', email: ' || self.contactEmail || ', phone: ' || self.contactPhone);
             self.Address_obj.display;
-            --TODO: adopted pets list
         END;
 
     MEMBER PROCEDURE setContactPhone(newPhone varchar) IS
         BEGIN 
-            UPDATE Family_objtab f
-            SET f.contactPhone = newPhone
-            WHERE f.id = SELF.id;
+            UPDATE Family_objtab 
+            SET contactPhone = newPhone
+            WHERE id = SELF.id;
         END;
 
     MEMBER PROCEDURE setEmail(newEmail varchar) IS
         BEGIN 
-            UPDATE Family_objtab f
-            SET f.contactEmail = newEmail
-            WHERE f.id = SELF.id;
+            UPDATE Family_objtab 
+            SET contactEmail = newEmail
+            WHERE id = SELF.id;
         END;
 
     MEMBER PROCEDURE setAddress(newAddress Address_objtyp) IS
         BEGIN 
-            UPDATE Family_objtab f
-            SET f.Address_obj = newAddress
-            WHERE f.id = SELF.id;
+            UPDATE Family_objtab 
+            SET Address_obj = newAddress
+            WHERE id = SELF.id;
         END;  
 
     MEMBER PROCEDURE deleteFamily IS
         BEGIN 
-            DELETE FROM Family_objtab f
-            WHERE f.id = SELF.id;
+            DELETE FROM Family_objtab 
+            WHERE id = SELF.id;
         END;  
 END;
          
@@ -122,10 +123,10 @@ CREATE OR REPLACE TYPE BODY Pet_objtyp AS
         END;      
     END;
     MEMBER PROCEDURE DISPLAY IS
-    BEGIN
-        DBMS_OUTPUT.PUT_LINE('Pet: ' || self.id ||', name: ' || self.name ||
-        ', type: ' || petType || ', gender:' || self.gender || 'is taken?: ' || self.isTaken);
-    END;
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('Pet: ' || self.id ||', name: ' || self.name ||
+            ', type: ' || self.petType || ', gender:' || self.gender || 'is taken?: ' || self.isTaken);
+        END;
 
 
     MEMBER FUNCTION getALLTreatments return TreatmentList_vartyp IS
@@ -146,7 +147,7 @@ CREATE OR REPLACE TYPE BODY Pet_objtyp AS
         BEGIN
             SELECT REF (f) INTO familyRef_obj 
             FROM Family_objTab f
-            WHERE f.id = idFamily;
+            WHERE id = idFamily;
 
             UPDATE Pet_objtab
             SET isTaken = 1,
@@ -175,38 +176,44 @@ CREATE OR REPLACE TYPE BODY Pet_objtyp AS
 
     MEMBER PROCEDURE setDateOfDep(dateOfDep date) IS
          BEGIN 
-            UPDATE Pet_objtab p
-            SET p.dateOfDeparture = dateOfDep
-            WHERE f.id = SELF.id;
+            UPDATE Pet_objtab 
+            SET dateOfDeparture = dateOfDep
+            WHERE id = SELF.id;
         END; 
 
     MEMBER PROCEDURE setName(newName1 varchar) IS
         BEGIN 
-            UPDATE Pet_objtab p
-            SET p.name = newName1
-            WHERE f.id = SELF.id;
+            UPDATE Pet_objtab
+            SET name = newName1
+            WHERE id = SELF.id;
         END; 
 
      MEMBER PROCEDURE setDateOfBirth(dateOfBirth date) IS
         BEGIN 
-            UPDATE Pet_objtab p
-            SET p.dateOfBirth = dateOfBirth
-            WHERE f.id = SELF.id;
+            UPDATE Pet_objtab 
+            SET dateOfBirth = dateOfBirth
+            WHERE id = SELF.id;
         END;
 
         MEMBER PROCEDURE setdateOfArrivalShelter(dateOfArrivalShelter date) IS
         BEGIN 
-            UPDATE Pet_objtab p
-            SET p.dateOfArrivalShelter = dateOfArrivalShelter
-            WHERE f.id = SELF.id;
+            UPDATE Pet_objtab 
+            SET dateOfArrivalShelter = dateOfArrivalShelter
+            WHERE id = SELF.id;
         END;
 
         MEMBER PROCEDURE setPetType(petTypepet varchar) IS
         BEGIN 
-            UPDATE Pet_objtab p
-            SET p.petType = petType_objtyp(petTypepet).petTypeTitle
-            WHERE f.id = SELF.id;
+            UPDATE Pet_objtab 
+            SET petType = petType_objtyp(petTypepet).petTypeTitle
+            WHERE id = SELF.id;
         END; 
+
+    MEMBER PROCEDURE deletePet IS 
+        BEGIN
+            DELETE FROM Pet_objtab 
+            WHERE id = SELF.id;
+        END;
          
 END;
 

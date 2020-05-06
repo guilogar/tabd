@@ -29,4 +29,5 @@ CREATE OR REPLACE TRIGGER FamilyType_objtab_on_insert
             INTO :new.id
             FROM dual;
         END;
-/        
+/ 
+      
