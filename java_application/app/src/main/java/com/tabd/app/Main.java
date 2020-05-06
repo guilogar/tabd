@@ -2,6 +2,7 @@ package com.tabd.app;
 
 import java.sql.*;
 import java.math.*;
+import java.util.Map;
 import java.util.Scanner;
 import oracle.jdbc.*;
 import oracle.jdbc.pool.*;
@@ -9,11 +10,9 @@ import oracle.sql.*;
 
 public class Main
 {
-    public static void gestionarFamilias() throws SQLException
+    public static void gestionarFamilias(Database db) throws SQLException
     {
-        DataHandler dh = new DataHandler();
-        dh.setDBConnection();
-        ResultSet rset = dh.genericSelect("Family_objtab"); // TreatmentType_objtab, Family_objtab, Pet_objtab
+        ResultSet rset = db.selectByTable("Family_objtab"); // TreatmentType_objtab, Family_objtab, Pet_objtab
         
         while (rset.next()) System.out.println (rset.getString(1));
         return;
@@ -44,9 +43,9 @@ public class Main
             switch(option)
             {
                 case 0: {} ; break;
-                case 1: gestionarFamilias(); break;
-                case 2: gestionarAnimales(); break;
-                case 3: gestionarTratamientos(); break;
+                case 1: gestionarFamilias(db); break;
+                case 2: gestionarAnimales(db); break;
+                case 3: gestionarTratamientos(db); break;
                 default:
                 {
                     System.out.println("Elección incorrecta. Por favor, introduzca una opción valida.");
@@ -56,12 +55,12 @@ public class Main
         } while(option < 0 || option > 6);
     }
     
-    public static void gestionarAnimales()
+    public static void gestionarAnimales(Database db)
     {
         
     }
     
-    public static void gestionarTratamientos()
+    public static void gestionarTratamientos(Database db)
     {
         
     }
@@ -80,6 +79,13 @@ public class Main
         
         do
         {
+            ProcessBuilder pb = new ProcessBuilder();
+            Map<String, String> env = pb.environment();
+            env.put("DB_HOST", "localhost");
+            env.put("DB_USER", "system");
+            env.put("DB_PASS", "root");
+            Database db = new Database(pb);
+            
             try
             {
                 Scanner s = new Scanner(System.in);
@@ -92,9 +98,9 @@ public class Main
             switch(option)
             {
                 case 0: {} ; break;
-                case 1: gestionarFamilias(); break;
-                case 2: gestionarAnimales(); break;
-                case 3: gestionarTratamientos(); break;
+                case 1: gestionarFamilias(db); break;
+                case 2: gestionarAnimales(db); break;
+                case 3: gestionarTratamientos(db); break;
                 default:
                 {
                     System.out.println("Elección incorrecta. Por favor, introduzca una opción valida.");
