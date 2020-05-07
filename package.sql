@@ -2,9 +2,7 @@ CREATE OR REPLACE PACKAGE SHELTER AS
 
 --TO-DO: to debug
     FUNCTION createAddress(street varchar, house number, apartment varchar, zip varchar)      RETURN Address_objtyp;
-    
-     PROCEDURE createTreatmentType(treatmentTypeName varchar);
-
+    PROCEDURE createTreatmentType(treatmentTypeName varchar);
     FUNCTION getAllPetsByType(petType varchar)              RETURN PetsList_vartyp;
     FUNCTION getAllAvailablePets                            RETURN PetsList_vartyp;
     FUNCTION getPetById(id number)                          RETURN Pet_objtyp;
@@ -12,7 +10,7 @@ CREATE OR REPLACE PACKAGE SHELTER AS
     FUNCTION getALLTreatments(petId number)                              RETURN TreatmentList_vartyp;
     PROCEDURE createPet(petName varchar, gender number, typeName varchar, dateOfArrivalInShelter date);
     PROCEDURE addTreatmentToPet(petId number, treatmentName varchar);
-    PROCEDURE deletePet(petId number); 
+    PROCEDURE deletePetProcedure(petId number); 
     PROCEDURE setPetType(petId number, petType varchar);
     PROCEDURE setPetName(petId number, newNamePet varchar);
     PROCEDURE setDateOfBirth(petId number, dateOfBirth date);
@@ -144,7 +142,7 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
            pet.addTreatment(treatmentName, sysdate);
         END; 
 
-    PROCEDURE deletePet(petId number) IS
+    PROCEDURE deletePetProcedure(petId number) IS
         pet Pet_objtyp;
         BEGIN
             pet := getPetById(petId);

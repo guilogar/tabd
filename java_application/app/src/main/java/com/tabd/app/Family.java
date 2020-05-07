@@ -11,10 +11,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Family {
     
@@ -105,6 +103,8 @@ public class Family {
             Object id = rset.getObject("id");
             f.add(new Family(db, (BigDecimal) id));
         }
+        
+        System.out.println(rset.getRow());
         
         return f;
     }

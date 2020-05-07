@@ -4,16 +4,13 @@ drop type Treatment_objtyp force;
 
 drop type TreatmentList_vartyp force;
 
--- drop type PetsList_vartyp force;
+drop type PetsList_vartyp force;
 
--- drop type PetType_objtyp force;
+drop type PetType_objtyp force;
 
--- drop type Family_objtyp force;
+drop type Family_objtyp force;
 
--- drop type TreatmentType_objtyp force;
-
--- drop type Pet_objtyp force;
-
+drop type Pet_objtyp force;
 
 create or replace type Address_objtyp  as object (
     street    varchar(500),
@@ -21,7 +18,6 @@ create or replace type Address_objtyp  as object (
     apartment varchar(500),
     zip       varchar(500),
     MEMBER PROCEDURE display
-    
 );
 /
 
@@ -47,7 +43,6 @@ create or replace type Treatment_objtyp  as object (
 /
 
 create or replace type TreatmentList_vartyp  as table of Treatment_objtyp;
-
 /
 
 create or replace type Family_objtyp  as object (
@@ -62,13 +57,12 @@ create or replace type Family_objtyp  as object (
     MEMBER PROCEDURE setEmail(newEmail varchar),
     MEMBER PROCEDURE setAddress(newAddress Address_objtyp),
     MEMBER PROCEDURE deleteFamily
-    );
-
+);
 /
 
 create or replace type FamilyList_vartyp as table of Family_objtyp;
-
 /
+
 create or replace type Pet_objtyp  as object (
     id number,
     name varchar(500),
@@ -96,5 +90,4 @@ create or replace type Pet_objtyp  as object (
 /
 
 create or replace type PetsList_vartyp  as table of Pet_objtyp;
-
 /

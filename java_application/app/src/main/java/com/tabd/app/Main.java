@@ -1,7 +1,6 @@
 package com.tabd.app;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.*;
 import java.util.Map;
 import java.util.Scanner;
@@ -12,12 +11,14 @@ public class Main
     {
         System.out.println("Bienvenido a la gestión de las familias.");
         System.out.println("¿Que desea hacer?");
+        
         System.out.println("1º) Mostrar todas las familias existentes");
         System.out.println("2º) Buscar una familia por su nombre");
         System.out.println("3º) Modificar el telefono de una familia existente");
         System.out.println("4º) Modificar el email de una familia existente");
         System.out.println("5º) Modificar la direccion de una familia existente");
         System.out.println("6º) Borrar una familia existente");
+        System.out.println("7º) Crear una familia");
         System.out.print("Su elección (escriba '0' para salir) ==> ");
         
         int option;
@@ -75,11 +76,6 @@ public class Main
                     {
                         System.out.println("La familia con el id " + id + " no existe. Por favor, pruebe otro id.");
                     }
-                    /*
-                    Family.printFamilys(
-                        Family.searchFamilys(db, line, true)
-                    );
-                    */
                 }; break;
                 case 4: {}; break;
                 case 5: {}; break;
@@ -120,8 +116,8 @@ public class Main
             ProcessBuilder pb = new ProcessBuilder();
             Map<String, String> env = pb.environment();
             env.put("DB_HOST", "localhost");
-            env.put("DB_USER", "system");
-            env.put("DB_PASS", "root");
+            env.put("DB_USER", "guillermo");
+            env.put("DB_PASS", "guillermo");
             Database db = new Database(pb);
             
             try

@@ -204,7 +204,7 @@ public class Database
     // New code with call to procedures and functions of oracle database
     public int updateInTable(String procedure, BigDecimal id, Object newValue) throws SQLException
     {
-        CallableStatement cs = this.con.prepareCall ( "{call " + procedure + " (?, ?)}" );
+        CallableStatement cs = this.con.prepareCall ( "{call SHELTER." + procedure + " (?, ?)}" );
         cs.setBigDecimal(1, id);
         cs.setObject(2, newValue);
         return cs.executeUpdate();
@@ -212,7 +212,7 @@ public class Database
     
     public int destroyInTable(String procedure, BigDecimal id) throws SQLException
     {
-        CallableStatement cs = this.con.prepareCall ( "{call " + procedure + " (?)}" );
+        CallableStatement cs = this.con.prepareCall ( "{call SHELTER." + procedure + " (?)}" );
         cs.setBigDecimal(1, id);
         return cs.executeUpdate();
     }
