@@ -1,3 +1,7 @@
+-- drop trigger treatmentType_on_insert;
+-- drop trigger PetType_objtab_on_insert;
+-- drop trigger FamilyType_objtab_on_insert;
+
 --trigger on treatmentType inserting
 CREATE OR REPLACE TRIGGER treatmentType_on_insert
     BEFORE INSERT ON TreatmentType_objtab
@@ -18,7 +22,7 @@ CREATE OR REPLACE TRIGGER PetType_objtab_on_insert
             INTO :new.id
             FROM dual;
         END;
-/        
+/
 
 --trigger on familyTab_id_seq inserting
 CREATE OR REPLACE TRIGGER FamilyType_objtab_on_insert
@@ -29,5 +33,4 @@ CREATE OR REPLACE TRIGGER FamilyType_objtab_on_insert
             INTO :new.id
             FROM dual;
         END;
-/ 
-      
+/

@@ -2,6 +2,8 @@ drop type Address_objtyp force;
 
 drop type Treatment_objtyp force;
 
+drop type TreatmentType_objtyp force;
+
 drop type TreatmentList_vartyp force;
 
 drop type PetsList_vartyp force;
@@ -12,7 +14,7 @@ drop type Family_objtyp force;
 
 drop type Pet_objtyp force;
 
-create or replace type Address_objtyp  as object (
+create or replace type Address_objtyp as object (
     street    varchar(500),
     house     number,
     apartment varchar(500),
@@ -21,7 +23,7 @@ create or replace type Address_objtyp  as object (
 );
 /
 
-create or replace type TreatmentType_objtyp  as object (
+create or replace type TreatmentType_objtyp as object (
     id number,
     treatmentTypeTitle varchar(500)
 );
