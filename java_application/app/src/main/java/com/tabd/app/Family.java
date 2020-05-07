@@ -56,41 +56,15 @@ public class Family {
         return atributos;
     }
     
-    public Map<String, Object> updateAttributes(String[] columns, Object[] values) throws SQLException
-    {
-        Map<String, Object> atributos = getAttributes();
-        
-        Set<String> k        = atributos.keySet();
-        Collection<Object> v = (Collection<Object>) atributos.values();
-        
-        String[] columnsConditions = (String[]) k.toArray(new String[0]);
-        Object[] valuesConditions  = (Object[]) v.toArray();
-        
-        this.db.updateInTable(this.table, columns, values, columnsConditions, valuesConditions, true);
-        
-        atributos = getAttributes();
-        
-        return atributos;
-    }
-    
     public boolean update(String procedure, String newValue) throws SQLException
     {
-        return this.db.updateInTable(this.table, procedure, this.id, newValue) > 0;
+        return this.db.updateInTable(procedure, this.id, newValue) > 0;
     }
     
     public boolean destroy() throws SQLException
     {
-        Map<String, Object> atributos = getAttributes();
-        
-        Set<String> k        = atributos.keySet();
-        Collection<Object> v = (Collection<Object>) atributos.values();
-        
-        String[] columnsConditions = (String[]) k.toArray(new String[0]);
-        Object[] valuesConditions  = (Object[]) v.toArray();
-        
-        int cambios = this.db.deleteInTable(this.table, columnsConditions, valuesConditions, true);
-        
-        return (cambios > 0);
+        String procedure = "";
+        return this.db.destroyInTable(procedure, this.id) > 0;
     }
     
     public void printFamily() throws SQLException

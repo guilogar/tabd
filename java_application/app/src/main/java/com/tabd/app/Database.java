@@ -127,7 +127,7 @@ public class Database
                 String condi = (conditions.length > 0) ? conditions[i] : "";
                 
                 if(values[i] != null)
-                    if(columns[i].indexOf("like") >= 0)
+                    if(columns[i].contains("like"))
                         query += columns[i] + " ? " + condi;
                     else
                         query += columns[i] + " = ? " + condi;
@@ -136,7 +136,7 @@ public class Database
             }
             
             if(values[columns.length - 1] != null)
-                if(columns[columns.length - 1].indexOf("like") >= 0)
+                if(columns[columns.length - 1].contains("like"))
                     query += columns[columns.length - 1] + " ? ";
                 else
                     query += columns[columns.length - 1] + " = ? ";
@@ -202,7 +202,7 @@ public class Database
     }
     
     // New code with call to procedures and functions of oracle database
-    public int updateInTable(String table, String procedure, BigDecimal id, Object newValue) throws SQLException
+    public int updateInTable(String procedure, BigDecimal id, Object newValue) throws SQLException
     {
         CallableStatement cs = this.con.prepareCall ( "{call " + procedure + " (?, ?)}" );
         cs.setBigDecimal(1, id);
@@ -210,132 +210,10 @@ public class Database
         return cs.executeUpdate();
     }
     
-    // Old code with the order update, of MySQL project...
-    public int updateInTable(String table, String[] columns, Object[] values,
-                           String[] columnsConditions, Object[] valuesConditions,
-                           boolean condi) throws SQLException
+    public int destroyInTable(String procedure, BigDecimal id) throws SQLException
     {
-        String[] conditions = new String[columns.length];
-        for (int i = 0; i < conditions.length; i++)
-        {
-            if(condi) conditions[i] = " and ";
-            else      conditions[i] = " or ";
-        }
-        return updateInTable(this.con, table, columns, values, columnsConditions, valuesConditions, conditions);
-    }
-    
-    public int updateInTable(String table, String[] columns, Object[] values,
-                           String[] columnsConditions, Object[] valuesConditions,
-                           String[] conditions) throws SQLException
-    {
-        return updateInTable(this.con, table, columns, values, columnsConditions, valuesConditions, conditions);
-    }
-    
-    public int updateInTable(Connection con, String table, String[] columns, Object[] values,
-                             String[] columnsConditions, Object[] valuesConditions,
-                             String[] conditions) throws SQLException
-    {
-        int cambios = 0;
-        if(columns.length > 0)
-        {
-            String query = "update " + table + "set ";
-            
-            for (int i = 0; i < columns.length - 1; i++)
-            {
-                query += columns[i] + " = ?, ";
-            }
-            
-            query += columns[columns.length - 1] + " = ? ";
-            
-            query += " where ";
-            
-            for (int i = 0; i < columnsConditions.length - 1; i++)
-            {
-                String condi = (conditions.length > 0) ? conditions[i] : "";
-                if(valuesConditions[i] != null)
-                    query += columnsConditions[i] + " = ? " + condi;
-                else
-                    query += columnsConditions[i] + " is ? " + condi;
-            }
-            
-            if(valuesConditions[columnsConditions.length - 1] != null)
-                query += columnsConditions[columnsConditions.length - 1] + " = ? ";
-            else
-                query += columnsConditions[columnsConditions.length - 1] + " is ? ";
-            
-            PreparedStatement ps = con.prepareStatement(query);
-            
-            int i = 1;
-            for (Object value : values)
-            {
-                ps.setObject(i++, value);
-            }
-            
-            for (Object value : valuesConditions)
-            {
-                ps.setObject(i++, value);
-            }
-            
-            cambios = ps.executeUpdate();
-        }
-        return cambios;
-    }
-    
-    public int deleteInTable(String table, String[] columns, Object[] values,
-                             boolean condi)
-                             throws SQLException
-    {
-        String[] conditions = new String[columns.length];
-        for (int i = 0; i < conditions.length; i++)
-        {
-            if(condi) conditions[i] = " and ";
-            else      conditions[i] = " or ";
-        }
-        return deleteInTable(this.con, table, columns, values, conditions);
-    }
-    
-    public int deleteInTable(String table, String[] columns, Object[] values,
-                             String[] conditions)
-                             throws SQLException
-    {
-        return deleteInTable(this.con, table, columns, values, conditions);
-    }
-    
-    public int deleteInTable(Connection con, String table, String[] columns,
-                             Object[] values, String[] conditions)
-                             throws SQLException
-    {
-        int cambios = 0;
-        
-        if(columns.length > 0)
-        {
-            String query = "delete from " + table + " where ";
-            
-            for (int i = 0; i < columns.length - 1; i++)
-            {
-                String condi = (conditions.length > 0) ? conditions[i] : "";
-                if(values[i] != null)
-                    query += columns[i] + " = ? " + condi;
-                else
-                    query += columns[i] + " is ? " + condi;
-            }
-            
-            if(values[columns.length - 1] != null)
-                query += columns[columns.length - 1] + " = ? ";
-            else
-                query += columns[columns.length - 1] + " is ? ";
-            
-            PreparedStatement ps = con.prepareStatement(query);
-            
-            int i = 1;
-            for (Object value : values)
-            {
-                ps.setObject(i++, value);
-            }
-            
-            cambios = ps.executeUpdate();
-        }
-        
-        return cambios;
+        CallableStatement cs = this.con.prepareCall ( "{call " + procedure + " (?)}" );
+        cs.setBigDecimal(1, id);
+        return cs.executeUpdate();
     }
 }
