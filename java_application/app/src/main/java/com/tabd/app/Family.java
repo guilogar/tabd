@@ -12,7 +12,8 @@ import java.sql.SQLException;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class Family {
@@ -28,15 +29,18 @@ public class Family {
         this.table = " Family_objtab ";
     }
     
-    public HashMap<String, Object> getAttributes() throws SQLException
+    public boolean familyExists() throws SQLException
     {
-        HashMap<String, Object> atributos = new HashMap<String, Object>();
-        this.db.createConnection();
+        return !this.getAttributes().isEmpty();
+    }
+    
+    public Map<String, Object> getAttributes() throws SQLException
+    {
+        Map<String, Object> atributos = new LinkedHashMap<>();
         
-        String[] columns = { "id" };
-        BigDecimal[] values    = { this.id };
-        String[] conditions = {};
-        ResultSet rs = this.db.searchInTableByValue(this.table, columns, values, conditions);
+        String[] columns    = { "id" };
+        BigDecimal[] values = { this.id };
+        ResultSet rs = this.db.searchInTableByValue(this.table, columns, values);
         
         if(rs.next())
         {
@@ -45,16 +49,16 @@ public class Family {
             for (int i = 1; i <= columnCount; i++ )
             {
                 String nameAttr = rsmd.getColumnName(i);
-                atributos.put(nameAttr, (Object) rs.getObject(nameAttr));
+                atributos.put(nameAttr, rs.getObject(nameAttr));
             }
         }
         
         return atributos;
     }
     
-    public HashMap<String, Object> updateAttributes(String[] columns, Object[] values) throws SQLException
+    public Map<String, Object> updateAttributes(String[] columns, Object[] values) throws SQLException
     {
-        HashMap<String, Object> atributos = getAttributes();
+        Map<String, Object> atributos = getAttributes();
         
         Set<String> k        = atributos.keySet();
         Collection<Object> v = (Collection<Object>) atributos.values();
@@ -69,9 +73,14 @@ public class Family {
         return atributos;
     }
     
+    public boolean update(String procedure, String newValue) throws SQLException
+    {
+        return this.db.updateInTable(this.table, procedure, this.id, newValue) > 0;
+    }
+    
     public boolean destroy() throws SQLException
     {
-        HashMap<String, Object> atributos = getAttributes();
+        Map<String, Object> atributos = getAttributes();
         
         Set<String> k        = atributos.keySet();
         Collection<Object> v = (Collection<Object>) atributos.values();
@@ -86,13 +95,13 @@ public class Family {
     
     public void printFamily() throws SQLException
     {
-        HashMap<String, Object> atributos = getAttributes();
+        Map<String, Object> atributos = getAttributes();
         
         for(String key : atributos.keySet())
         {
             Object value = (Object) atributos.get(key);
             
-            if (value instanceof Struct)
+            if(value instanceof Struct)
             {
                 Struct valueStruct = (Struct) value;
                 Object[] valueAttributes = valueStruct.getAttributes();
@@ -104,6 +113,7 @@ public class Family {
                 {
                     System.out.println(attribute);
                 }
+                System.out.println("======================");
             } else
             {
                 System.out.println(key + ": " + value);
@@ -111,11 +121,29 @@ public class Family {
         }
     }
     
-    public static ArrayList<Family> listFamilys(Database db) throws SQLException
+    public static ArrayList<Family> listAllFamilys(Database db) throws SQLException
     {
         ResultSet rset = db.selectByTable("Family_objtab");
         ArrayList<Family> f = new ArrayList<>();
         
+        while(rset.next())
+        {
+            Object id = rset.getObject("id");
+            f.add(new Family(db, (BigDecimal) id));
+        }
+        
+        return f;
+    }
+    
+    public static ArrayList<Family> searchFamilys(Database db, String familyName, boolean useLike) throws SQLException
+    {
+        String[] columns = { " lower(familyname) like " };
+        Object[] values  = { (useLike) ? "%" + familyName + "%" : familyName };
+        ResultSet rset = db.searchInTableByValue("Family_objtab", columns, values);
+        
+        ArrayList<Family> f = new ArrayList<>();
+        System.out.println(rset.getRow());
+            
         while(rset.next())
         {
             Object id = rset.getObject("id");
@@ -130,6 +158,8 @@ public class Family {
         for(Family f : familys)
         {
             f.printFamily();
+            System.out.println("=======================================");
+            System.out.println("=======================================");
         }
     }
 }

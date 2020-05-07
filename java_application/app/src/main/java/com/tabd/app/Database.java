@@ -5,6 +5,7 @@
  */
 package com.tabd.app;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.sql.*;
 import oracle.jdbc.pool.OracleDataSource;
@@ -109,6 +110,12 @@ public class Database
         return searchInTableByValue(this.con, table, columns, values, conditions);
     }
     
+    public ResultSet searchInTableByValue(String table, String[] columns, Object[] values) throws SQLException
+    {
+        String[] conditions = {};
+        return searchInTableByValue(this.con, table, columns, values, conditions);
+    }
+    
     public ResultSet searchInTableByValue(Connection con, String table, String[] columns, Object[] values, String[] conditions) throws SQLException
     {
         if(columns.length > 0)
@@ -120,13 +127,19 @@ public class Database
                 String condi = (conditions.length > 0) ? conditions[i] : "";
                 
                 if(values[i] != null)
-                    query += columns[i] + " = ? " + condi;
+                    if(columns[i].indexOf("like") >= 0)
+                        query += columns[i] + " ? " + condi;
+                    else
+                        query += columns[i] + " = ? " + condi;
                 else
                     query += columns[i] + " is ? " + condi;
             }
             
             if(values[columns.length - 1] != null)
-                query += columns[columns.length - 1] + " = ? ";
+                if(columns[columns.length - 1].indexOf("like") >= 0)
+                    query += columns[columns.length - 1] + " ? ";
+                else
+                    query += columns[columns.length - 1] + " = ? ";
             else
                 query += columns[columns.length - 1] + " is ? ";
             
@@ -188,6 +201,16 @@ public class Database
         return cambios;
     }
     
+    // New code with call to procedures and functions of oracle database
+    public int updateInTable(String table, String procedure, BigDecimal id, Object newValue) throws SQLException
+    {
+        CallableStatement cs = this.con.prepareCall ( "{call " + procedure + " (?, ?)}" );
+        cs.setBigDecimal(1, id);
+        cs.setObject(2, newValue);
+        return cs.executeUpdate();
+    }
+    
+    // Old code with the order update, of MySQL project...
     public int updateInTable(String table, String[] columns, Object[] values,
                            String[] columnsConditions, Object[] valuesConditions,
                            boolean condi) throws SQLException

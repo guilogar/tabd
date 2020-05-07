@@ -207,15 +207,14 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
             RETURN pet.getALLTreatments;
         END;
 
---family's functions
-
-PROCEDURE createFamily(familyName varchar, contactName varchar, contactPhone varchar, contactEmail varchar, famAdress Address_objtyp) IS
-    BEGIN 
-        INSERT INTO Family_objtab
-        (familyName, contactName,contactEmail,contactPhone, Address_obj)
-        VALUES
-        (familyName, contactName,contactEmail, contactPhone, famAdress);
-    END;
+    -- family's functions
+    PROCEDURE createFamily(familyName varchar, contactName varchar, contactPhone varchar, contactEmail varchar, famAdress Address_objtyp) IS
+        BEGIN 
+            INSERT INTO Family_objtab
+            (familyName, contactName,contactEmail,contactPhone, Address_obj)
+            VALUES
+            (familyName, contactName,contactEmail, contactPhone, famAdress);
+        END;
 
     FUNCTION getFamilyById(id number)  RETURN Family_objtyp IS
         family family_objtyp;
