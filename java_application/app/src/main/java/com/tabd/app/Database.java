@@ -86,9 +86,9 @@ public class Database
     {
         
         String query = "select * from " + table;
-        PreparedStatement ps = this.con.prepareStatement(query);
+        Statement ps = this.con.createStatement();
         
-        ResultSet rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery(query);
         
         return rs;
     }

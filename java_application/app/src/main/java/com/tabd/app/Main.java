@@ -1,20 +1,17 @@
 package com.tabd.app;
 
+import java.math.BigInteger;
 import java.sql.*;
-import java.math.*;
 import java.util.Map;
 import java.util.Scanner;
-import oracle.jdbc.*;
-import oracle.jdbc.pool.*;
-import oracle.sql.*;
 
 public class Main
 {
     public static void gestionarFamilias(Database db) throws SQLException
     {
-        ResultSet rset = db.selectByTable("Family_objtab"); // TreatmentType_objtab, Family_objtab, Pet_objtab
-        
-        while (rset.next()) System.out.println (rset.getString(1));
+        Family.printFamilys(
+            Family.listFamilys(db)
+        );
         return;
         
         System.out.println("Bienvenido a la gestión de las familias.");

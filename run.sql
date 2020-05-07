@@ -1,20 +1,20 @@
-@types.sql;
+@C:\Users\lopez\Desktop\tabd\types.sql;
 /
 
-@tables.sql;
+@C:\Users\lopez\Desktop\tabd\tables.sql;
 /
 
-@sequence.sql;
+@C:\Users\lopez\Desktop\tabd\sequence.sql;
 /
 
-@triggers.sql;
+@C:\Users\lopez\Desktop\tabd\triggers.sql;
 /
 
-@typebodies.sql;
+@C:\Users\lopez\Desktop\tabd\typebodies.sql;
 /
 
-@package.sql;
+@C:\Users\lopez\Desktop\tabd\package.sql;
 /
 
-@test.sql;
+@C:\Users\lopez\Desktop\tabd\test.sql;
 /
