@@ -153,7 +153,6 @@ public class Main
                 }; break;
                 case 6: {
                     Scanner s = new Scanner(System.in);
-                    Scanner ss = new Scanner(System.in);
                     
                     System.out.print("Introduzca el id de la familia a borrar ==> ");
                     BigDecimal id = s.nextBigDecimal();
