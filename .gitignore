@@ -279,3 +279,4 @@ TSWLatexianTemp*
 *.lpz
 test.sql
 /java_application/app/target/
+*.zip
