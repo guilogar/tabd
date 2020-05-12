@@ -5,7 +5,9 @@
  */
 package com.tabd.app;
 
+
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -14,22 +16,17 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Family {
+public class TreatmentType {
     
     private Database db;
     private BigDecimal id;
     private String table;
     
-    public Family(Database db, BigDecimal id) throws SQLException
+    public TreatmentType(Database db, BigDecimal id) throws SQLException
     {
         this.db = db;
         this.id = id;
-        this.table = " Family_objtab ";
-    }
-    
-    public boolean familyExists() throws SQLException
-    {
-        return !this.getAttributes().isEmpty();
+        this.table = " TreatmentType_objtab ";
     }
     
     public Map<String, Object> getAttributes() throws SQLException
@@ -54,33 +51,7 @@ public class Family {
         return atributos;
     }
     
-    public boolean update(String procedure, Object newValue) throws SQLException
-    {
-        return this.db.updateInTable(procedure, this.id, newValue) > 0;
-    }
-    
-    public boolean updatePhone(String phone) throws SQLException
-    {
-        return this.update("setFamilyPhone", phone);
-    }
-    
-    public boolean updateEmail(String email) throws SQLException
-    {
-        return this.update("setFamilyEmail", email);
-    }
-    
-    public boolean updateAddress(Struct address) throws SQLException
-    {
-        return this.update("setFamilyAddress", address);
-    }
-    
-    public boolean destroy() throws SQLException
-    {
-        String procedure = "deleteFamily";
-        return this.db.destroyInTable(procedure, this.id) > 0;
-    }
-    
-    public void printFamily() throws SQLException
+    public void printTreatmentType() throws SQLException
     {
         Map<String, Object> atributos = getAttributes();
         
@@ -101,6 +72,26 @@ public class Family {
                     System.out.println(attribute);
                 }
                 System.out.println("======================");
+            } else if(value instanceof Array)
+            {
+                Array valueArray = (Array) value;
+                ResultSet rs = valueArray.getResultSet();
+                
+                System.out.println(key + ": ");
+                System.out.println("======================");
+                
+                while(rs.next())
+                {
+                    ResultSetMetaData rsmd = rs.getMetaData();
+                    int columnCount = rsmd.getColumnCount();
+                    
+                    for(int i = 0; i < columnCount; i++)
+                    {
+                        System.out.println(rs.getObject(i));
+                    }
+                }
+                
+                System.out.println("======================");
             } else
             {
                 System.out.println(key + ": " + value);
@@ -108,48 +99,31 @@ public class Family {
         }
     }
     
-    public static boolean createFamily(Database db, Object[] values) throws SQLException
+    public static boolean createTreatmentType(Database db, Object[] values) throws SQLException
     {
-        String procedure = "createFamily";
+        String procedure = "createTreatmentType";
         return db.insertInTable(procedure, values) > 0;
     }
     
-    public static ArrayList<Family> listAllFamilys(Database db) throws SQLException
+    public static ArrayList<TreatmentType> listAllTreatmentTypes(Database db) throws SQLException
     {
-        ResultSet rset = db.selectByTable("Family_objtab");
-        ArrayList<Family> f = new ArrayList<>();
+        ResultSet rset = db.selectByTable("TreatmentType_objtab");
+        ArrayList<TreatmentType> t = new ArrayList<>();
         
         while(rset.next())
         {
             Object id = rset.getObject("id");
-            f.add(new Family(db, (BigDecimal) id));
+            t.add(new TreatmentType(db, (BigDecimal) id));
         }
         
-        return f;
+        return t;
     }
     
-    public static ArrayList<Family> searchFamilys(Database db, String familyName, boolean useLike) throws SQLException
+    public static void printTreatmentTypes(ArrayList<TreatmentType> treatments) throws SQLException
     {
-        String[] columns = { " lower(familyname) like " };
-        Object[] values  = { (useLike) ? "%" + familyName + "%" : familyName };
-        ResultSet rset = db.searchInTableByValue("Family_objtab", columns, values);
-        
-        ArrayList<Family> f = new ArrayList<>();
-            
-        while(rset.next())
+        for(TreatmentType t : treatments)
         {
-            Object id = rset.getObject("id");
-            f.add(new Family(db, (BigDecimal) id));
-        }
-        
-        return f;
-    }
-    
-    public static void printFamilys(ArrayList<Family> familys) throws SQLException
-    {
-        for(Family f : familys)
-        {
-            f.printFamily();
+            t.printTreatmentType();
             System.out.println("=======================================");
             System.out.println("=======================================");
         }

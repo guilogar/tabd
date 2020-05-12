@@ -6,28 +6,27 @@ import java.util.Map;
 import java.sql.Struct;
 import java.util.Scanner;
 import oracle.jdbc.internal.OracleTypes;
-import oracle.sql.STRUCT;
 
 public class Main
 {
     public static void gestionarFamilias(Database db) throws SQLException
     {
-        System.out.println("Bienvenido a la gestión de las familias.");
-        System.out.println("¿Que desea hacer?");
-        
-        System.out.println("1º) Mostrar todas las familias existentes");
-        System.out.println("2º) Buscar una familia por su nombre");
-        System.out.println("3º) Modificar el telefono de una familia existente");
-        System.out.println("4º) Modificar el email de una familia existente");
-        System.out.println("5º) Modificar la direccion de una familia existente");
-        System.out.println("6º) Borrar una familia existente");
-        System.out.println("7º) Crear una familia");
-        System.out.print("Su elección (escriba '0' para salir) ==> ");
-        
         int option;
         
         do
         {
+            System.out.println("Bienvenido a la gestión de las familias.");
+            System.out.println("¿Que desea hacer?");
+
+            System.out.println("1º) Mostrar todas las familias existentes");
+            System.out.println("2º) Buscar una familia por su nombre");
+            System.out.println("3º) Modificar el telefono de una familia existente");
+            System.out.println("4º) Modificar el email de una familia existente");
+            System.out.println("5º) Modificar la direccion de una familia existente");
+            System.out.println("6º) Borrar una familia existente");
+            System.out.println("7º) Crear una familia");
+            System.out.print("Su elección (escriba '0' para salir) ==> ");
+            
             try
             {
                 Scanner s = new Scanner(System.in);
@@ -233,39 +232,282 @@ public class Main
                     System.out.print("Su elección (escriba '0' para salir) ==> ");
                 }
             }
-        } while(option < 0 || option > 6);
+        } while(option != 0);
     }
     
-    public static void gestionarAnimales(Database db)
+    public static void gestionarAnimales(Database db) throws SQLException
     {
-        
+        int option;
+        do
+        {
+            System.out.println("Bienvenido a la gestión de los animales.");
+            System.out.println("¿Que desea hacer?");
+
+            System.out.println("1º) Mostrar todos los animales existentes");
+            System.out.println("2º) Buscar un animal por su nombres");
+            System.out.println("3º) Modificar el nombre de un animal existente");
+            System.out.println("4º) Modificar la fecha de nacimiento de un animal existente");
+            System.out.println("5º) Modificar el tipo de animal");
+            System.out.println("6º) Borrar un animal existente");
+            System.out.println("7º) Crear un animal");
+            System.out.print("Su elección (escriba '0' para salir) ==> ");
+            
+            try
+            {
+                Scanner s = new Scanner(System.in);
+                option = s.nextInt();
+            } catch(Exception e)
+            {
+                option = -1;
+            }
+            
+            switch(option)
+            {
+                case 0: {} ; break;
+                case 1: {
+                    Pet.printPets(
+                        Pet.listAllPets(db)
+                    );
+                }; break;
+                case 2: {
+                    Scanner s = new Scanner(System.in);
+                    System.out.print("Introduzca el nombre de la familia a buscar ==> ");
+                    String line = s.nextLine();
+                    
+                    Family.printFamilys(
+                        Family.searchFamilys(db, line, true)
+                    );
+                }; break;
+                case 3: {
+                    Scanner s = new Scanner(System.in);
+                    Scanner ss = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id del animal a modificar ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    System.out.print("Introduzca el nuevo nombre del animal ==> ");
+                    String name = ss.nextLine();
+                    
+                    Pet p = new Pet(db, id);
+                    
+                    if(p.petExists())
+                    {
+                        if(p.updateName(name))
+                        {
+                            System.out.println("Animal actualizado correctamente.");
+                        } else
+                        {
+                            System.out.println("Animal no actualizado. Vuelva a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("El animal con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 4: {
+                    Scanner s = new Scanner(System.in);
+                    Scanner ss = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id del animal a modificar ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    System.out.print("Introduzca la nueva fecha de nacimiento (YYYY-MM-DD) ==> ");
+                    String date = ss.nextLine();
+                    
+                    Pet p = new Pet(db, id);
+                    
+                    if(p.petExists())
+                    {
+                        if(p.updateDateBirth(date))
+                        {
+                            System.out.println("Animal actualizado correctamente.");
+                        } else
+                        {
+                            System.out.println("Animal no actualizado. Vuelva a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("El animal con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 5: {
+                    Scanner s = new Scanner(System.in);
+                    Scanner ss = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id del animal a modificar el tipo ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    System.out.print("Introduzca el nuevo tipo del animal (dog o cat) ==> ");
+                    String type = ss.nextLine();
+                    
+                    Pet p = new Pet(db, id);
+                    
+                    if(p.petExists())
+                    {
+                        if(p.updateType(type))
+                        {
+                            System.out.println("El tipo del animal ha sido actualizado correctamente.");
+                        } else
+                        {
+                            System.out.println("Ha ocurrido un error con la actualización. Por favor, vuelta a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("El animal con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 6: {
+                    Scanner s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id del animal a borrar ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    Pet p = new Pet(db, id);
+                    
+                    if(p.petExists())
+                    {
+                        if(p.destroy())
+                        {
+                            System.out.println("Animal borrado correctamente.");
+                        } else
+                        {
+                            System.out.println("Animal no borrado. Vuelva a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("El animal con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 7: {
+                    Scanner s = new Scanner(System.in);
+                    Object[] values = new Object[4];
+                    
+                    System.out.print("Introduzca el nombre ==> ");
+                    values[0] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el genero (0 para macho, o 1 para hembra) ==> ");
+                    values[1] = s.nextInt();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el tipo de animal ==> ");
+                    values[2] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca la fecha de llegada (YYYY-MM-DD) ==> ");
+                    values[3] = s.nextLine();
+                    
+                    if(Pet.createPet(db, values))
+                    {
+                        System.out.println("Animal creado correctamente.");
+                    } else
+                    {
+                        System.out.println("Animal no creado. Vuelva a intentarlo.");
+                    }
+                }; break;
+                default:
+                {
+                    System.out.println("Elección incorrecta. Por favor, introduzca una opción valida.");
+                    System.out.print("Su elección (escriba '0' para salir) ==> ");
+                }
+            }
+        } while(option != 0);
     }
     
-    public static void gestionarTratamientos(Database db)
+    public static void gestionarTratamientos(Database db) throws SQLException
     {
-        
+        int option;
+        do
+        {
+            System.out.println("Bienvenido a la gestión de los tratamientos.");
+            System.out.println("¿Que desea hacer?");
+
+            System.out.println("1º) Mostrar los tipos de tratamientos existentes");
+            System.out.println("2º) Crear un tipo de tratamiento");
+            System.out.println("3º) Obtener todos los tratamientos de un animal");
+            System.out.print("Su elección (escriba '0' para salir) ==> ");
+            
+            try
+            {
+                Scanner s = new Scanner(System.in);
+                option = s.nextInt();
+            } catch(Exception e)
+            {
+                option = -1;
+            }
+            
+            switch(option)
+            {
+                case 0: {}; break;
+                case 1: {
+                    TreatmentType.printTreatmentTypes(
+                        TreatmentType.listAllTreatmentTypes(db)
+                    );
+                }; break;
+                case 2: {
+                    Scanner s = new Scanner(System.in);
+                    Object[] values = new Object[1];
+                    
+                    System.out.print("Introduzca el nombre ==> ");
+                    values[0] = s.nextLine();
+                    
+                    if(TreatmentType.createTreatmentType(db, values))
+                    {
+                        System.out.println("Tipo creado correctamente.");
+                    } else
+                    {
+                        System.out.println("Tipo no creado. Vuelva a intentarlo.");
+                    }
+                }; break;
+                case 3: {
+                    Scanner s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id del animal ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    Pet p = new Pet(db, id);
+                    
+                    if(p.petExists())
+                    {
+                        p.printTreatmentList();
+                    } else
+                    {
+                        System.out.println("El animal con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                default:
+                {
+                    System.out.println("Elección incorrecta. Por favor, introduzca una opción valida.");
+                    System.out.print("Su elección (escriba '0' para salir) ==> ");
+                }
+            }
+        } while(option != 0);
     }
     
     public static void main(String[] args) throws SQLException
     {
-        System.out.println("Bienvenido a la aplicación de gestión de la Veterinaria.");
-        System.out.println("¿Que desea hacer?");
-        System.out.println("1º) Gestionar Familias");
-        System.out.println("2º) Gestionar Animales");
-        System.out.println("3º) Gestionar Tratamientos");
+        ProcessBuilder pb = new ProcessBuilder();
         
-        System.out.print("Su elección (escriba '0' para salir) ==> ");
+        Map<String, String> env = pb.environment();
+        env.put("DB_HOST", "localhost");
+        env.put("DB_USER", "guillermo");
+        env.put("DB_PASS", "guillermo");
+        
+        Database db = new Database(pb);
         
         int option;
-        
         do
         {
-            ProcessBuilder pb = new ProcessBuilder();
-            Map<String, String> env = pb.environment();
-            env.put("DB_HOST", "localhost");
-            env.put("DB_USER", "guillermo");
-            env.put("DB_PASS", "guillermo");
-            Database db = new Database(pb);
+            System.out.println("Bienvenido a la aplicación de gestión de la Veterinaria.");
+            System.out.println("¿Que desea hacer?");
+            System.out.println("1º) Gestionar Familias");
+            System.out.println("2º) Gestionar Animales");
+            System.out.println("3º) Gestionar Tratamientos");
+
+            System.out.print("Su elección (escriba '0' para salir) ==> ");
             
             try
             {
@@ -288,6 +530,6 @@ public class Main
                     System.out.print("Su elección (escriba '0' para salir) ==> ");
                 }
             }
-        } while(option < 0 || option > 3);
+        } while(option != 0);
     }
 }

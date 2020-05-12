@@ -10,7 +10,7 @@ CREATE OR REPLACE PACKAGE SHELTER AS
     FUNCTION getALLTreatments(petId number)                              RETURN TreatmentList_vartyp;
     PROCEDURE createPet(petName varchar, gender number, typeName varchar, dateOfArrivalInShelter date);
     PROCEDURE addTreatmentToPet(petId number, treatmentName varchar);
-    PROCEDURE deletePetProcedure(petId number); 
+    PROCEDURE deletePet(petId number); 
     PROCEDURE setPetType(petId number, petType varchar);
     PROCEDURE setPetName(petId number, newNamePet varchar);
     PROCEDURE setDateOfBirth(petId number, dateOfBirth date);
@@ -121,7 +121,8 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
             BEGIN
             SELECT VALUE(p) INTO pet
                 FROM Pet_objtab p
-                WHERE p.id = id;
+                WHERE p.id = id
+                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY;
 
             EXCEPTION
              WHEN NO_DATA_FOUND THEN
@@ -140,7 +141,7 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
            pet.addTreatment(treatmentName, sysdate);
         END; 
 
-    PROCEDURE deletePetProcedure(petId number) IS
+    PROCEDURE deletePet(petId number) IS
         pet Pet_objtyp;
         BEGIN
             pet := getPetById(petId);
