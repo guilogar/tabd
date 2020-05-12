@@ -51,48 +51,10 @@
 \usetikzlibrary{arrows,positioning}
 \RequirePackage{amsmath,bm}
 
-\RequirePackage{mathspec}
-\RequirePackage{xltxtra,xunicode}
+\RequirePackage{xunicode}
 
 \usepackage{listings}
 %paragraph
-
-
-%--Font-- 
-\setmathsfont(Digits,Latin,Greek)[
-Path = fonts/,Extension = .otf,
-Scale=1.4,
-UprightFont=ArnoPro-Regular,
-BoldFont=ArnoPro-Bold,
-ItalicFont=ArnoPro-Italic,
-BoldItalicFont=ArnoPro-BoldItalic
-]{ArnoPro}
-\setmathrm
-[Path = fonts/,Extension = .otf,
-Scale=1.4,
-UprightFont=ArnoPro-Regular,
-BoldFont=ArnoPro-Bold,
-ItalicFont=ArnoPro-Italic,
-BoldItalicFont=ArnoPro-BoldItalic
-]{ArnoPro}
-\defaultfontfeatures{Mapping=tex-text}
-\aliasfontfeatureoption{Ligatures}{Historic}{Historical}
-\setromanfont
-[Path = fonts/,
-Extension = .otf,
-Scale=1.4,
-Mapping=tex-text, 
-Ligatures={Common}, 
-SizeFeatures={%
-	{Size={-10}, Font=*-RegularCaption},
-	{Size={10-13.0}, Font=*},
-	{Size={13.01-19.9}, Font=*-RegularSubhead, Ligatures=Rare, Contextuals={Swash,Alternate}},
-	{Size={19.91-},Font=*-RegularDisplay, Ligatures=Rare, Contextuals={Swash,Alternate}}},
-UprightFont=ArnoPro-Regular,
-BoldFont=ArnoPro-Bold,
-ItalicFont=ArnoPro-Italic,
-BoldItalicFont=ArnoPro-BoldItalic
-]{ArnoPro}
 
 \onehalfspacing
 
@@ -192,10 +154,3 @@ BoldItalicFont=ArnoPro-BoldItalic
 }
 \titleformat{\subsubsection}
   {\normalfont\color{Blu}\bfseries\sc\sffamily}{\stocaz{\thesubsubsection}}{0.8em}{}
-  
-  
-
-  
-  
-  
-  

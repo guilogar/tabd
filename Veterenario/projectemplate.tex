@@ -21,14 +21,43 @@ Las herramientas de desarrollo fueron Oracle Database Express, el lenguaje pl/SQ
 
 \section{Descripción del contexto y requisitos funcionales y no funcionales}
 \subsection{Descripción del contexto}
-\begin{center}
-Descripción del contexto
-\end{center}
+\begin{justify}
+El contexto en el que nos movemos es el interior de una Veterinaria, que necesita modernizar su sistema a un formato digital, y para ello necesita un programa que le permita gestionar los recursos que disponen y guardarlos de forma persistente en disco.
 
+Por ello, identificamos sus entidades y nos damos cuenta de que tienen 3 entidades principales: animales, tratamientos de los animales y las familias que adoptan a los animales.
+
+Por ende, nuestro contexto estará basado en esas 3 entidades.
+
+Por otro lado, la Veterinaria no necesita guardar nada mas que datos de sus recursos, por ende, no hay que guardar tipos extraños en la base de datos como imágenes o tipos binarios.
+
+Además, a los tratamientos y a los animales se les categoriza, por tanto, tenemos tipos enumerados que acompañan a dos de las tres entidades principales.
+
+Por último, se establecen relaciones entre las entidades, por ende, habrá que gestionar esas relaciones existentes mediante funciones y métodos donde contribuyan dichas entidades.
+\end{justify}
+
+\newpage
 
 \subsection{Requisitos funcionales y no funcionales}
 \begin{center}
+
+\begin{tabularx}{\textwidth}
+\hline
 Requisitos funcionales
+\hline
+Manejo de todas las excepciones y errores de usuario \\
+Creación automática de id para una fila de tabla \\
+Consultas SQL autogeneradas \\
+Comprobación de la entrada del usuario del tipo de datos
+\end{tabularx}
+
+\begin{tabularx}{\textwidth}
+\hline
+Requisitos no funcionales
+\hline
+Fácil instalación de la aplicación en el ordenador \\
+Acceso directo a todas las funciones del sistema
+\end{tabularx}
+
 \end{center}
 
 \newpage
@@ -36,7 +65,7 @@ Requisitos funcionales
 \section{Diseño lógico y físico del sistema}
 \subsection{Diagrama de clases}
 \begin{figure}[H]
-\centering
+\justifying
 \includegraphics[width=1\textwidth]{Logical View.png}
 \caption{\label{fig:1}Diagrama de clases.}
 \end{figure}
@@ -46,15 +75,142 @@ Requisitos funcionales
 El \textbf{diagrama de clases} para esta aplicación consta de 4 clases y 2 enumeraciones. La tabla 'Pet' almacena toda la información relacionada con ella. La tabla está vinculada a la tabla 'Treatment' por la relación composición, que almacena todos los procedimientos en curso.Cada tipo de 'Treatment' tiene 'TreatmentType'. También hay una relación con la tabla 'Familia' agregación, ya que no todos en la tabla 'Pet'   tienen 'Family'. Cada mascota tiene un tipo que existe en la enumeración 'PetType'.
 
 \subsection{Esquema lógico O / R específico}
-\begin{center}
-Esquema lógico O / R específico
-\end{center}
+\begin{justify}
+
+\begin{lstlisting}[language=Sql, basicstyle=\scriptsize]
+drop type Address_objtyp force;
+
+drop type Treatment_objtyp force;
+
+drop type TreatmentType_objtyp force;
+
+drop type TreatmentList_vartyp force;
+
+drop type PetsList_vartyp force;
+
+drop type PetType_objtyp force;
+
+drop type Family_objtyp force;
+
+drop type Pet_objtyp force;
+
+create or replace type Address_objtyp as object (
+    street    varchar(500),
+    house     number,
+    apartment varchar(500),
+    zip       varchar(500),
+    MEMBER PROCEDURE display
+);
+/
+
+create or replace type TreatmentType_objtyp as object (
+    id number,
+    treatmentTypeTitle varchar(500)
+);
+/
+
+create or replace type PetType_objtyp as object (
+    petTypeTitle varchar(500),
+    CONSTRUCTOR FUNCTION petType_objtyp( petTypeTitle varchar)
+    RETURN SELF AS RESULT
+);
+/
+
+create or replace type Treatment_objtyp  as object (
+    id number,
+    treatmentDate date,
+    treatmentType varchar(500),
+    MEMBER PROCEDURE display
+);
+/
+
+create or replace type TreatmentList_vartyp  as table of Treatment_objtyp;
+/
+
+create or replace type Family_objtyp  as object (
+    id number,
+    familyName varchar(500),
+    contactName varchar(500),
+    contactEmail varchar(500),
+    contactPhone varchar(500),
+    Address_obj Address_objtyp,
+    MEMBER PROCEDURE display,
+    MEMBER PROCEDURE setContactPhone(newPhone varchar),
+    MEMBER PROCEDURE setEmail(newEmail varchar),
+    MEMBER PROCEDURE setAddress(newAddress Address_objtyp),
+    MEMBER PROCEDURE deleteFamily
+);
+/
+
+create or replace type FamilyList_vartyp as table of Family_objtyp;
+/
+
+create or replace type Pet_objtyp  as object (
+    id number,
+    name varchar(500),
+    dateOfBirth date,
+    gender NUMBER(1,0),
+    isTaken NUMBER(1,0),
+    dateOfArrivalShelter date,
+    petType varchar(200),
+    Treatments_List TreatmentList_vartyp,
+    dateOfDeparture date,
+    FamilyRef REF Family_objtyp,
+    MEMBER FUNCTION hasPetThisTreatment(treatmentType varchar)    return number,
+    MEMBER FUNCTION getALLTreatments                              return TreatmentList_vartyp,
+    MEMBER PROCEDURE adoptByFamily(idFamily number),
+    MEMBER PROCEDURE cancelAdoption,
+    MEMBER PROCEDURE DISPLAY,
+    MEMBER PROCEDURE addTreatment(treatmentType varchar, dateOfTr date),
+    MEMBER PROCEDURE setDateOfDep(dateOfDep date),
+    MEMBER PROCEDURE setName(newName1 varchar),
+    MEMBER PROCEDURE setDateOfBirth(dateOfBirth date),
+    MEMBER PROCEDURE setdateOfArrivalShelter(dateOfArrivalShelter date),
+    MEMBER PROCEDURE setPetType(petTypepet varchar),
+    MEMBER PROCEDURE deletePet
+);
+/
+
+create or replace type PetsList_vartyp  as table of Pet_objtyp;
+/
+drop table TreatmentType_objtab cascade constraints;
+
+drop table Pet_objtab cascade constraints;
+
+drop table Family_objtab cascade constraints;
+
+create table TreatmentType_objtab of TreatmentType_objtyp (id primary key) 
+object identifier is primary key;
+
+alter table TreatmentType_objtab
+ADD CONSTRAINT unique_tr_type_title unique(treatmentTypeTitle);
+
+create table Family_objtab of Family_objtyp
+(primary key (id))
+object identifier is primary key;
+
+alter table Family_objtab
+ADD CONSTRAINT unique_fam_phone unique(contactPhone);
+
+create table Pet_objtab of Pet_objtyp 
+(primary key (id),
+FOREIGN KEY (FamilyRef) REFERENCES Family_objtab)
+object identifier is primary key;
+
+alter table  Pet_objtab 
+ADD CONSTRAINT petType_notNull check ( petType is not null );
+
+\end{lstlisting}
+
+\end{justify}
 
 
 \subsection{Diseño físico}
-\begin{center}
-Physical desing
-\end{center}
+\begin{justify}
+
+Respecto a este apartado, hemos decidido optar por tomar las opciones por defecto que nos da Oracle en la creación de tablas, ya que, nuestro sistema no esta pensado para ofrecer un rendimiento especial, ya sea en tarea de lectura, escritura o actualización.
+
+\end{justify}
 \newpage
 
 \section{Desarrollo del sistema}
@@ -158,82 +314,73 @@ create or replace type PetsList_vartyp  as table of Pet_objtyp;
 
 \subsection{Tablas}
 \begin{lstlisting}[language=Sql, basicstyle=\scriptsize]
-drop table TreatmentType_objtab force;
+drop table TreatmentType_objtab cascade constraints;
 
-drop table Pet_objtab force;
+drop table Pet_objtab cascade constraints;
 
-drop table Family_objtab force;
-
+drop table Family_objtab cascade constraints;
 
 create table TreatmentType_objtab of TreatmentType_objtyp (id primary key) 
 object identifier is primary key;
 
-/
-
 alter table TreatmentType_objtab
 ADD CONSTRAINT unique_tr_type_title unique(treatmentTypeTitle);
 
-/
-
-create table Family_objtab of Family_objtyp (id primary key) 
+create table Family_objtab of Family_objtyp
+(primary key (id))
 object identifier is primary key;
-/
 
 alter table Family_objtab
 ADD CONSTRAINT unique_fam_phone unique(contactPhone);
-/
 
 create table Pet_objtab of Pet_objtyp 
 (primary key (id),
 FOREIGN KEY (FamilyRef) REFERENCES Family_objtab)
-object identifier is primary key 
+object identifier is primary key
 nested table Treatments_List store as Pets_Treatments((
     PRIMARY KEY(NESTED_TABLE_ID, id))
     ORGANIZATION INDEX COMPRESS);
-/
-
 
 alter table  Pet_objtab 
 ADD CONSTRAINT petType_notNull check ( petType is not null );
-/
-
 \end{lstlisting}
 \newpage
 
 \subsection{Secuencias}
 \begin{lstlisting}[language=Sql, basicstyle=\scriptsize]
---sequence for treatmentType.id
+drop sequence treatmentTypeTab_id_seq;
+drop sequence petTab_id_seq;
+drop sequence treatmentTab_id_seq;
+drop sequence familyTab_id_seq;
+
 CREATE SEQUENCE treatmentTypeTab_id_seq
     INCREMENT BY 1
     START WITH 1
     MAXVALUE 5000;
-/
 
---sequence for treatmentType.id
 CREATE SEQUENCE petTab_id_seq
     INCREMENT BY 1
     START WITH 1
     MAXVALUE 5000;
-/
 
---sequence for treatments.id
 CREATE SEQUENCE treatmentTab_id_seq
     INCREMENT BY 1
     START WITH 1
     MAXVALUE 5000;
-/
 
---sequence for treatmentType.id
 CREATE SEQUENCE familyTab_id_seq
     INCREMENT BY 1
     START WITH 1
     MAXVALUE 5000;
-/
 \end{lstlisting}
 \newpage
 
 \subsection{Disparadores}
 \begin{lstlisting}[language=Sql, basicstyle=\scriptsize]
+-- drop trigger treatmentType_on_insert;
+-- drop trigger PetType_objtab_on_insert;
+-- drop trigger FamilyType_objtab_on_insert;
+
 --trigger on treatmentType inserting
 CREATE OR REPLACE TRIGGER treatmentType_on_insert
     BEFORE INSERT ON TreatmentType_objtab
@@ -254,7 +401,7 @@ CREATE OR REPLACE TRIGGER PetType_objtab_on_insert
             INTO :new.id
             FROM dual;
         END;
-/        
+/
 
 --trigger on familyTab_id_seq inserting
 CREATE OR REPLACE TRIGGER FamilyType_objtab_on_insert
@@ -265,7 +412,7 @@ CREATE OR REPLACE TRIGGER FamilyType_objtab_on_insert
             INTO :new.id
             FROM dual;
         END;
-/ 
+/
 \end{lstlisting}
 \newpage
 
@@ -855,6 +1002,8 @@ END;
 
 \subsection{Datos}
 \begin{lstlisting}[language=Sql, basicstyle=\scriptsize]
+TRUNCATE TABLE Family_objtab;
+
 INSERT ALL
 INTO Family_objtab(familyName, contactName,contactEmail,contactPhone, Address_obj)
 VALUES(
@@ -878,18 +1027,18 @@ VALUES(
     Address_objtyp('C. Santo Domingo', 16, '2С', '11006'))
  SELECT * FROM dual;
 
-/
+TRUNCATE TABLE TreatmentType_objtab;
 
 INSERT ALL
-INTO TreatmentType_objtab VALUES('castration')
-INTO TreatmentType_objtab VALUES('sterilization')
-INTO TreatmentType_objtab VALUES('rabies')
-INTO TreatmentType_objtab VALUES('rabies')
-INTO TreatmentType_objtab VALUES('carnivores')
-INTO TreatmentType_objtab VALUES('calvirus')
+INTO TreatmentType_objtab VALUES(1, 'castration')
+INTO TreatmentType_objtab VALUES(2, 'sterilization')
+INTO TreatmentType_objtab VALUES(3, 'rabies')
+INTO TreatmentType_objtab VALUES(4, 'rabies')
+INTO TreatmentType_objtab VALUES(5, 'carnivores')
+INTO TreatmentType_objtab VALUES(6, 'calvirus')
  SELECT * FROM dual;
 
-/
+TRUNCATE TABLE Pet_objtab;
 
 INSERT ALL 
 INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petType,
@@ -925,41 +1074,37 @@ Treatments_List, dateOfDeparture, FamilyRef REF)
      VALUES('Greta', TO_DATE('01/01/2020', 'MM/DD/YYYY'), 0, 0, sysdate, 
      petType_objtyp('cat').petTypeTitle, TreatmentList_vartyp(), null, null)
 SELECT * FROM dual;
-
-/
 \end{lstlisting}
 
 \subsection{Lanzamiento}
 \begin{lstlisting}[language=Sql, basicstyle=\scriptsize]
-@types.sql;
-/
+alter session set NLS_DATE_FORMAT='yy-MM-dd';
 
-@tables.sql;
-/
+@C:\Users\lopez\Desktop\tabd\types.sql;
 
-@sequence.sql;
-/
+@C:\Users\lopez\Desktop\tabd\tables.sql;
 
-@triggers.sql;
-/
+@C:\Users\lopez\Desktop\tabd\sequences.sql;
 
-@typebodies.sql;
-/
+@C:\Users\lopez\Desktop\tabd\triggers.sql;
 
-@package.sql;
-/
+@C:\Users\lopez\Desktop\tabd\typebodies.sql;
 
-@test.sql;
-/
+@C:\Users\lopez\Desktop\tabd\package.sql;
 
+@C:\Users\lopez\Desktop\tabd\test.sql;
 \end{lstlisting}
 \newpage
 
 
 \section{Conclusiones}
-\begin{center}
+\begin{justify}
 En este trabajo, se desarrolló el sistema de gestión del refugio de animales desde la perspectiva del gerente de la organización. El sistema permite mantener registros de animales, familias que recogen animales y servicios médicos para animales. El sistema consiste en una base de datos y una aplicación Java que proporciona acceso a la base y sus funciones.
-\end{center}
+
+Como conclusión, llegamos a que cualquier sistema que dependa de guardar datos persistentes, debe tener una base de datos consistente, a parte del programa que acceda a la misma y le apliqué la algoritmia deseada.
+
+Por ello, consideramos que lo aprendido aquí es de vital importancia para desarrollar un sistema consistente y robusto frente a errores, redundancias e inconsistencias.
+\end{justify}
 
 \newpage
 \begin{thebibliography}{9}
