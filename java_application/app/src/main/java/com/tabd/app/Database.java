@@ -185,7 +185,7 @@ public class Database
         {
             cs.setObject(count++, o);
         }
-        cs.registerOutParameter(1, TypeReturn, "ADDRESS_OBJTYP"); 
+        cs.registerOutParameter(1, TypeReturn, TypeName); 
         
         cs.execute();
         

@@ -1,6 +1,4 @@
--- connect system/root
 -- alter session set “_ORACLE_SCRIPT”=true;
--- ALTER USER guillermo quota unlimited on system;
 
 drop table TreatmentType_objtab cascade constraints;
 
