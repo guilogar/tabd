@@ -50,10 +50,3 @@ INSERT ALL
     INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petType, Treatments_List, dateOfDeparture, FamilyRef)
         VALUES('Greta', TO_DATE('01/01/2020', 'MM/DD/YYYY'), 0, 0, sysdate, petType_objtyp('cat').petTypeTitle, TreatmentList_vartyp(), null, null)
 SELECT * FROM dual;
-
-    
-
-
-
-
-
