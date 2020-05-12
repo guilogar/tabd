@@ -1,3 +1,5 @@
+alter session set NLS_DATE_FORMAT='yy-MM-dd';
+
 @C:\Users\lopez\Desktop\tabd\types.sql;
 
 @C:\Users\lopez\Desktop\tabd\tables.sql;

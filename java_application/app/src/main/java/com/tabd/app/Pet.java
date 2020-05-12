@@ -75,10 +75,19 @@ public class Pet {
         return this.update("setPetType", type);
     }
     
+    public boolean setFamily(BigDecimal idFamily) throws SQLException
+    {
+        return this.update("adoptByFamily", idFamily);
+    }
+    
+    public boolean deleteFamily() throws SQLException
+    {
+        return this.db.destroyInTable("cancelAdoption", this.id) > 0;
+    }
+    
     public boolean destroy() throws SQLException
     {
-        String procedure = "deletePet";
-        return this.db.destroyInTable(procedure, this.id) > 0;
+        return this.db.destroyInTable("deletePet", this.id) > 0;
     }
     
     public void printTreatmentList() throws SQLException
@@ -155,8 +164,7 @@ public class Pet {
     
     public static boolean createPet(Database db, Object[] values) throws SQLException
     {
-        String procedure = "createPet";
-        return db.insertInTable(procedure, values) > 0;
+        return db.insertInTable("createPet", values) > 0;
     }
     
     public static ArrayList<Pet> listAllPets(Database db) throws SQLException

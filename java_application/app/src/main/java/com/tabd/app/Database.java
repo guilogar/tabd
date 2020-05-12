@@ -255,8 +255,6 @@ public class Database
     public int updateInTable(String procedure, BigDecimal id, Object newValue) throws SQLException
     {
         CallableStatement cs = this.con.prepareCall ( "{call SHELTER." + procedure + " (?, ?)}" );
-        System.out.println(id);
-        System.out.println(newValue);
         cs.setBigDecimal(1, id);
         cs.setObject(2, newValue);
         return cs.executeUpdate();
