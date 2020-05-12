@@ -54,9 +54,24 @@ public class Family {
         return atributos;
     }
     
-    public boolean update(String procedure, String newValue) throws SQLException
+    public boolean update(String procedure, Object newValue) throws SQLException
     {
         return this.db.updateInTable(procedure, this.id, newValue) > 0;
+    }
+    
+    public boolean updatePhone(String phone) throws SQLException
+    {
+        return this.update("setFamilyPhone", phone);
+    }
+    
+    public boolean updateEmail(String email) throws SQLException
+    {
+        return this.update("setFamilyEmail", email);
+    }
+    
+    public boolean updateAddress(Struct address) throws SQLException
+    {
+        return this.update("setFamilyAddress", address);
     }
     
     public boolean destroy() throws SQLException
@@ -93,6 +108,12 @@ public class Family {
         }
     }
     
+    public static boolean createFamily(Database db, Object[] values) throws SQLException
+    {
+        String procedure = "createFamily";
+        return db.insertInTable(procedure, values) > 0;
+    }
+    
     public static ArrayList<Family> listAllFamilys(Database db) throws SQLException
     {
         ResultSet rset = db.selectByTable("Family_objtab");
@@ -104,8 +125,6 @@ public class Family {
             f.add(new Family(db, (BigDecimal) id));
         }
         
-        System.out.println(rset.getRow());
-        
         return f;
     }
     
@@ -116,7 +135,6 @@ public class Family {
         ResultSet rset = db.searchInTableByValue("Family_objtab", columns, values);
         
         ArrayList<Family> f = new ArrayList<>();
-        System.out.println(rset.getRow());
             
         while(rset.next())
         {

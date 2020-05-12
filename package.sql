@@ -27,8 +27,6 @@ CREATE OR REPLACE PACKAGE SHELTER AS
     FUNCTION getFamilyById(id number)                          RETURN Family_objtyp;
     FUNCTION getFamilyByPhone(phone varchar)                   RETURN Family_objtyp;
     FUNCTION getFamilyIdByPhone(phone varchar)                 RETURN number;
-    
-
 END SHELTER;
 /
 
@@ -220,7 +218,8 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
             BEGIN
             SELECT VALUE(f) INTO family
                 FROM Family_objtab f
-                WHERE f.id = id;
+                WHERE f.id = id
+                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY;
 
             EXCEPTION
              WHEN NO_DATA_FOUND THEN
@@ -238,7 +237,8 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
             BEGIN
             SELECT VALUE(f) INTO family
                 FROM Family_objtab f
-                WHERE f.contactPhone = phone;
+                WHERE f.contactPhone = phone
+                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY;
 
             EXCEPTION
              WHEN NO_DATA_FOUND THEN
@@ -256,7 +256,8 @@ CREATE OR REPLACE PACKAGE BODY SHELTER IS
             BEGIN
             SELECT VALUE(f) INTO family
                 FROM Family_objtab f
-                WHERE f.contactPhone = phone;
+                WHERE f.contactPhone = phone
+                OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY;
 
             EXCEPTION
              WHEN NO_DATA_FOUND THEN

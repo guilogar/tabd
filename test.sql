@@ -1,3 +1,4 @@
+TRUNCATE TABLE Family_objtab;
 INSERT ALL
     INTO Family_objtab(familyName, contactName, contactEmail, contactPhone, Address_obj)
     VALUES(
@@ -21,6 +22,7 @@ INSERT ALL
         Address_objtyp('C. Santo Domingo', 16, '2С', '11006'))
 SELECT * FROM dual;
 
+TRUNCATE TABLE TreatmentType_objtab;
 INSERT ALL
     INTO TreatmentType_objtab VALUES(1, 'castration')
     INTO TreatmentType_objtab VALUES(2, 'sterilization')
@@ -29,6 +31,7 @@ INSERT ALL
     INTO TreatmentType_objtab VALUES(5, 'calvirus')
 SELECT * FROM dual;
 
+TRUNCATE TABLE Pet_objtab;
 INSERT ALL 
     INTO Pet_objtab (name, dateOfBirth, gender, isTaken, dateOfArrivalShelter, petType, Treatments_List, dateOfDeparture, FamilyRef)
         VALUES('Domingo', TO_DATE('01/01/2018', 'MM/DD/YYYY'), 1, 0, sysdate, petType_objtyp('dog').petTypeTitle, TreatmentList_vartyp(), null, null)

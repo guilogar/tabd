@@ -8,6 +8,8 @@ package com.tabd.app;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.sql.*;
+import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.OracleTypes;
 import oracle.jdbc.pool.OracleDataSource;
 
 /**
@@ -159,52 +161,103 @@ public class Database
         }
     }
     
-    public int insertIntoTable(String table, String[] columns, Object[] values) throws SQLException
+    // New code with call to procedures and functions of oracle database
+    public Struct callFunction(String function, Object[] values, int TypeReturn, String TypeName) throws SQLException
     {
-        return insertIntoTable(this.con, table, columns, values);
+        String parameters;
+        if(values.length == 1)
+        {
+            parameters = " (?) ";
+        } else if(values.length > 1)
+        {
+            parameters = " (";
+            for(int i = 0; i < values.length - 1; i++)
+            {
+                parameters += " ?,";
+            }
+            parameters += " ?) ";
+        } else
+        {
+            return null;
+        }
+        OracleCallableStatement cs = (OracleCallableStatement) this.con.prepareCall ( "{? = call SHELTER." + function + parameters + "}" );
+        int count = 2;
+        for(Object o : values)
+        {
+            cs.setObject(count++, o);
+        }
+        cs.registerOutParameter(1, TypeReturn, "ADDRESS_OBJTYP"); 
+        
+        cs.execute();
+        
+        return (Struct) cs.getObject(1);
     }
     
-    public int insertIntoTable(Connection con, String table, String[] columns, Object[] values) throws SQLException
+    public Struct callFunction(String function, Object[] values, int TypeReturn) throws SQLException
     {
-        int cambios = 0;
-        
-        if(columns.length > 0)
+        String parameters;
+        if(values.length == 1)
         {
-            String query = "insert into " + table + "(";
-            
-            for (int i = 0; i < columns.length - 1; i++)
+            parameters = " (?) ";
+        } else if(values.length > 1)
+        {
+            parameters = " (";
+            for(int i = 0; i < values.length - 1; i++)
             {
-                query += columns[i] + ", ";
+                parameters += " ?,";
             }
-            
-            query += columns[columns.length - 1] + ")";
-            query += " values(";
-            
-            for (int i = 0; i < columns.length - 1; i++)
+            parameters += " ?) ";
+        } else
+        {
+            return null;
+        }
+        OracleCallableStatement cs = (OracleCallableStatement) this.con.prepareCall ( "{? = call SHELTER." + function + parameters + "}" );
+        int count = 2;
+        for(Object o : values)
+        {
+            cs.setObject(count++, o);
+        }
+        cs.registerOutParameter(1, TypeReturn); 
+        
+        cs.execute();
+        
+        return (Struct) cs.getObject(1);
+    }
+    
+    public int insertInTable(String procedure, Object[] values) throws SQLException
+    {
+        String parameters;
+        if(values.length == 1)
+        {
+            parameters = " (?) ";
+        } else if(values.length > 1)
+        {
+            parameters = " (";
+            for(int i = 0; i < values.length - 1; i++)
             {
-                query += "?, ";
+                parameters += " ?,";
             }
-            
-            query += "?)";
-            
-            PreparedStatement ps = con.prepareStatement(query);
-            
-            int i = 1;
-            for (Object value : values)
-            {
-                ps.setObject(i++, value);
-            }
-            
-            cambios = ps.executeUpdate();
+            parameters += " ?) ";
+        } else
+        {
+            return 0;
         }
         
-        return cambios;
+        CallableStatement cs = this.con.prepareCall ( "{call SHELTER." + procedure + parameters + "}" );
+        int count = 1;
+        for(Object o : values)
+        {
+            cs.setObject(count++, o);
+        }
+        
+        return cs.executeUpdate();
     }
     
-    // New code with call to procedures and functions of oracle database
     public int updateInTable(String procedure, BigDecimal id, Object newValue) throws SQLException
     {
         CallableStatement cs = this.con.prepareCall ( "{call SHELTER." + procedure + " (?, ?)}" );
+        System.out.println(id);
+        System.out.println(newValue);
         cs.setBigDecimal(1, id);
         cs.setObject(2, newValue);
         return cs.executeUpdate();

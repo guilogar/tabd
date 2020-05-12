@@ -3,7 +3,10 @@ package com.tabd.app;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Map;
+import java.sql.Struct;
 import java.util.Scanner;
+import oracle.jdbc.internal.OracleTypes;
+import oracle.sql.STRUCT;
 
 public class Main
 {
@@ -65,7 +68,7 @@ public class Main
                     
                     if(f.familyExists())
                     {
-                        if(f.update("setFamilyPhone", phone))
+                        if(f.updatePhone(phone))
                         {
                             System.out.println("Familia actualizada correctamente.");
                         } else
@@ -77,9 +80,154 @@ public class Main
                         System.out.println("La familia con el id " + id + " no existe. Por favor, pruebe otro id.");
                     }
                 }; break;
-                case 4: {}; break;
-                case 5: {}; break;
-                case 6: {}; break;
+                case 4: {
+                    Scanner s = new Scanner(System.in);
+                    Scanner ss = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id de la familia a modificar ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    System.out.print("Introduzca el nuevo email ==> ");
+                    String email = ss.nextLine();
+                    
+                    Family f = new Family(db, id);
+                    
+                    if(f.familyExists())
+                    {
+                        if(f.updateEmail(email))
+                        {
+                            System.out.println("Familia actualizada correctamente.");
+                        } else
+                        {
+                            System.out.println("Familia no actualizada. Vuelva a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("La familia con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 5: {
+                    Scanner s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id de la familia a modificar la dirección ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    Family f = new Family(db, id);
+                    
+                    if(f.familyExists())
+                    {
+                        Object[] dir = new Object[4];
+                        s = new Scanner(System.in);
+                        
+                        System.out.print("Introduzca la calle de la dirección ==> ");
+                        dir[0] = s.nextLine();
+
+                        s = new Scanner(System.in);
+
+                        System.out.print("Introduzca el numero de la casa de la dirección (introduzca un número, cualquier otra cosa dara un error) ==> ");
+                        dir[1] = s.nextInt();
+
+                        s = new Scanner(System.in);
+
+                        System.out.print("Introduzca el apartamento de la dirección ==> ");
+                        dir[2] = s.nextLine();
+
+                        s = new Scanner(System.in);
+
+                        System.out.print("Introduzca el codigo postal de la dirección ==> ");
+                        dir[3] = s.nextLine();
+
+                        Struct address = db.callFunction("createAddress", dir, OracleTypes.STRUCT, "ADDRESS_OBJTYP");
+                        
+                        if(f.updateAddress(address))
+                        {
+                            System.out.println("La dirección de la familia ha sido actualizada correctamente.");
+                        } else
+                        {
+                            System.out.println("Ha ocurrido un error con la actualización. Por favor, vuelta a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("La familia con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 6: {
+                    Scanner s = new Scanner(System.in);
+                    Scanner ss = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el id de la familia a borrar ==> ");
+                    BigDecimal id = s.nextBigDecimal();
+                    
+                    Family f = new Family(db, id);
+                    
+                    if(f.familyExists())
+                    {
+                        if(f.destroy())
+                        {
+                            System.out.println("Familia borrada correctamente.");
+                        } else
+                        {
+                            System.out.println("Familia no borrada. Vuelva a intentarlo.");
+                        }
+                    } else
+                    {
+                        System.out.println("La familia con el id " + id + " no existe. Por favor, pruebe otro id.");
+                    }
+                }; break;
+                case 7: {
+                    Scanner s = new Scanner(System.in);
+                    Object[] values = new Object[5];
+                    
+                    System.out.print("Introduzca el nombre ==> ");
+                    values[0] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el nombre de contacto ==> ");
+                    values[1] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el telefono ==> ");
+                    values[2] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el email ==> ");
+                    values[3] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    Object[] dir = new Object[4];
+                    
+                    System.out.print("Introduzca la calle de la dirección ==> ");
+                    dir[0] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el numero de la casa de la dirección (introduzca un número, cualquier otra cosa dara un error) ==> ");
+                    dir[1] = s.nextInt();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el apartamento de la dirección ==> ");
+                    dir[2] = s.nextLine();
+                    
+                    s = new Scanner(System.in);
+                    
+                    System.out.print("Introduzca el codigo postal de la dirección ==> ");
+                    dir[3] = s.nextLine();
+                    
+                    values[4] = db.callFunction("createAddress", dir, OracleTypes.STRUCT, "ADDRESS_OBJTYP");
+                    
+                    if(Family.createFamily(db, values))
+                    {
+                        System.out.println("Familia creada correctamente.");
+                    } else
+                    {
+                        System.out.println("Familia no creada. Vuelva a intentarlo.");
+                    }
+                }; break;
                 default:
                 {
                     System.out.println("Elección incorrecta. Por favor, introduzca una opción valida.");
