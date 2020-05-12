@@ -5,16 +5,9 @@
  */
 package com.tabd.app;
 
-
 import java.math.BigDecimal;
-import java.sql.Array;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Struct;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class TreatmentType extends BasicObject
 {
