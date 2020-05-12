@@ -1,3 +1,6 @@
+## Java Application
+*.class
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
@@ -274,3 +277,5 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+test.sql
+/java_application/app/target/
