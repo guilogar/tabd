@@ -301,8 +301,8 @@ public class Main
                     System.out.print("Introduzca el nombre de la familia a buscar ==> ");
                     String line = s.nextLine();
                     
-                    Family.printFamilys(
-                        Family.searchFamilys(db, line, true)
+                    Pet.printPets(
+                        Pet.searchPets(db, line, true)
                     );
                 }; break;
                 case 3: {

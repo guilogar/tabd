@@ -99,13 +99,13 @@ public class Pet extends BasicObject
         BasicObject.print(pets);
     }
     
-    public static ArrayList<Pet> searchPets(Database db, String name, boolean useLike) throws SQLException
+    public static ArrayList<BasicObject> searchPets(Database db, String name, boolean useLike) throws SQLException
     {
         String[] columns = { " lower(name) like " };
         Object[] values  = { (useLike) ? "%" + name + "%" : name };
         ResultSet rset = db.searchInTableByValue("Pet_objtab", columns, values);
         
-        ArrayList<Pet> p = new ArrayList<>();
+        ArrayList<BasicObject> p = new ArrayList<>();
             
         while(rset.next())
         {
